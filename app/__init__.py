@@ -14,6 +14,10 @@ db = MongoEngine(app)
 def not_found(error):
     return render_template('404.html'), 404
 
+@app.route('/')
+def index():
+	return render_template('base.html')
+
 from app.mod_trends.controllers import mod_trends as mod_trends
 from app.mod_expert_prediction.controllers import mod_expert_prediction as mod_expert_prediction
 from app.mod_response_time.controllers import mod_response_time as mod_response_time

@@ -4,6 +4,8 @@
 	<title>java - display data from the database into a jtable - Stack Overflow</title>
 	<!-- Custom styles for this template -->
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/so_all.css') }}">
+
+	{% block header_script %}{% endblock %}
 </head>
 
 <body class="question-page new-topbar" lang>
@@ -81,7 +83,15 @@
 					</div>
 				</div>
 			</div>
+
+			<div id="content" class="snippet-hidden">
+				<div id="mainbar-full">
+					{% block content %}{% endblock %}
+				</div>
+			</div>
+
 		</div>
 
+		{% block content_script %}{% endblock %}
 	</body>
 	</html>

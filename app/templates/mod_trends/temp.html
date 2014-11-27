@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block header_script %}
+	<script type="text/javascript" src="{{ url_for('static', filename='bower_components/d3/d3.min.js') }}"></script>
+
+	<script type="text/javascript">
+	$(function(){
+		$.ajax({
+			url:"/trends/get-data",
+			dataType: "json",
+			success: function(data){
+				console.log(data);
+				drawViz(data);
+			}
+		});
+	});
+
+	//green swatch..
+	//var seedHeatMapColors = ["#f7fcf5", '#e5f5e0','#c7e9c0','#a1d99b','#74c476','#41ab5d','#238b45','#005a32'];
+	var seedHeatMapColors = ["#f7fbff", '#deebf7','#c6dbef','#9ecae1','#6baed6','#4292c6','#2171b5','#084594'];
+		
+	var heatMapColors = d3.scale.linear()
+                .domain(d3.range(0, 1, 1.0 / (seedHeatMapColors.length - 1)))
+                .range(seedHeatMapColors);
+
+    var heatMapRange = d3.scale.linear().domain([1, 15]).range([0,1]);
+
+	function drawViz(data){
+		var svg = d3.select("#matrix");
+		var itemHeight = 36;
+		var yPadding = 100;
+		var xPadding = 150;
+		var width = 960;
+
+		var main_visualization = svg.append("g").attr("class","main_visualization")
+									.attr("transform", function(datum,index){
+										var xTranslate = width/2 - ((xPadding + (itemHeight * data.row.length)/2));
+										return "translate("+xTranslate+",0)";
+									});
+
+		var row_labels = main_visualization.append("g").attr("class","row_labels").attr("transform","translate(0,"+yPadding+")");
+		var col_labels = main_visualization.append("g").attr("class","col_labels").attr("transform", "translate("+xPadding+",0)");
+		var matrix = main_visualization.append("g").attr("class","matrix").attr("transform", "translate("+xPadding+","+yPadding+")");
+
+		row_labels.selectAll(".row_labels").data(data.row).enter()
+			.append("text")
+			.attr("class","row_labels")
+			.text(function(datum){
+				return datum;
+			})
+			.attr("text-anchor", "end")
+			.attr("x", xPadding-20)
+			.attr("y", function(datum, index){
+				return index*itemHeight + 25;
+			})
+			.attr("style", "fill: #000000;");
+
+		col_labels.selectAll(".col_labels").data(data.col).enter()
+			.append("g")
+			.attr("class", "col_labels")
+			.attr("transform", function(datum, index){
+				return "translate("+(index* itemHeight + (itemHeight/2))+","+(yPadding-10)+")";
+			})
+			.each(function(datum, col_index){
+				var g = d3.select(this);
+				g.append("text")
+					.text(function(datum){
+						return datum
+					})
+					.attr("text-anchor","start")
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("transform",function(datum){
+						return "rotate(-50)";
+					})
+					.attr("style", "fill: #000000;");
+			});
+
+		matrix.selectAll(".rows")
+			.data(data.values).enter()
+			.append("g")
+			.attr("class", "rows")
+			.attr("transform", function(datum, index){
+				return "translate(0,"+(index*itemHeight)+")";
+			})
+			.each(function(datum, row_index){
+				
+				var row = d3.select(this);
+
+				row.selectAll(".items").data(datum).enter()
+					.append("rect")
+					.attr("class", "items")
+					.attr("width", itemHeight)
+					.attr("height", itemHeight)
+					.attr("x", function(datum, index){
+						return index*itemHeight;
+					})
+					.attr("y", 0)
+					.attr("rx", 5)
+					.attr("ry", 5)
+					.attr("stroke-width","2px")
+					.attr("style", function(datum){
+						return "fill: "+heatMapColors(heatMapRange(datum))+"; stroke: #FFFFFF"
+					});
+			});
+	}
+	</script>
+{% endblock %}
+
+{% block content %}
+	<svg width="960" height="500" id="matrix"></svg>
+{% endblock %}

@@ -1,388 +1,672 @@
 {% extends "base.html" %}
 
 {% block header_script %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/so/stub.en.js') }}"></script>
-
-<script>
-	StackExchange.ready(
-		function () {
-			StackExchange.using("postValidation", function () {
-				StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 1, 'question');
-			});
-
-			var suggestionTarget = $("#question-suggestions");
-			StackExchange.question.initTitleSearch($('#title'), suggestionTarget, 'Stack Overflow', function ($links) {
-				StackExchange.using('gps', function() {
-					StackExchange.gps.track('question_ask.suggestions_show', { });
-					$links.addClass('js-gps-track').data('gps-track', 'question_ask.suggestion_click');
-					StackExchange.gps.bindTrackClicks(suggestionTarget);
-				});
-			});
-
-
-			var $answerCheckbox = $('#answer-from-ask');
-			var editorInitialized = false;
-
-			function showAnswerSection(quick, callback) {
-				try
-				{
-					if (!editorInitialized) {
-                                //$("#question-answer-section").css("opacity", 0).removeClass("dno");
-                                $("#question-answer-section").removeClass("dno");
-                                // This line will throw an exception
-                                StackExchange.editor.finallyInit();
-                                editorInitialized = true;
-
-                                StackExchange.using("postValidation", function () {
-                                	StackExchange.postValidation.initOnBlur($("#question-answer-section"), 2, false);
-                                });
-                            }
-                            
-                            $('#question-answer-section, #answer-from-ask-form-item').fadeTo(quick ? 0 : 400, 1, callback);
-                        }
-                        catch (err)
-                        {
-                            // TODO: this never worked correctly. Long enough timeout that it will resolve eventually, yuck
-                            setTimeout(function () { showAnswerSection(quick, callback) }, 10);
-                        }
-                    }
-
-                    $answerCheckbox.change(function () {
-                    	if ($(this).is(':checked')) {
-                    		$('#question-only-section, #answer-from-ask-form-item').fadeOut(function () {
-                    			showAnswerSection(false, function () {
-                    				$('#wmd-input-42').focus();
-                    			});
-                    		});
-                    	}
-                    	else {
-                    		$('#question-answer-section, #answer-from-ask-form-item').fadeOut(function () {
-                    			$('#question-only-section, #answer-from-ask-form-item').fadeIn();
-                    		});
-                    	}
-                    });
-
-                    if ($answerCheckbox.is(':checked') || 0 > 0) {
-                    	$answerCheckbox.attr("checked", true);
-                    	$('#question-only-section').hide();
-                    	StackExchange.using("editor", function () {
-                    		setTimeout(function () { showAnswerSection(true) }, 2);
-                    	});
-                    }
-                    
-                }
-                );
-</script>
-
-<script>
-	StackExchange.using("gps", function () {
-		StackExchange.gps.track("question_ask.visit", { 'inbox_subscription': 2 });
-		var pending = [];
-		var send = StackExchange.helpers.DelayedReaction(function () {
-			StackExchange.gps.sendPending();
-		}, 3000);
-		var alreadySent = { "title_focus": 1 };
-		$("#title,#wmd-input,#tagnames").on("focus blur", function (evt) {
-			var what = { title: "title", "wmd-input": "body", "tagnames": "tags" }[this.id] + "_" + evt.type;
-			if (alreadySent[what])
-				return;
-			StackExchange.gps.track("question.action", { action_type: what }, true);
-			alreadySent[what] = 1;
-			send.trigger();
-		});
-	});
-</script>
-
-<script>
-	StackExchange.ready(function () {
-		StackExchange.realtime.init('wss://qa.sockets.stackexchange.com,ws://qa.sockets.stackexchange.com');
-		StackExchange.realtime.subscribeToInboxNotifications();
-		StackExchange.realtime.subscribeToReputationNotifications('1');
-		StackExchange.realtime.subscribeToTopBarNotifications('1');
-	});
-</script>
-<script>
-	StackExchange.init({"locale":"en","stackAuthUrl":"https://stackauth.com","serverTime":1417025992,"networkMetaHostname":"meta.stackexchange.com","routeName":"Questions/Ask","styleCode":true,"enableUserHovercards":true,"snippets":{"enabled":true,"domain":"stacksnippets.net"},"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","recaptchaAudioLang":"en","enableNewTagCreationWarning":true,"nonAsciiTags":true,"enableSocialMediaInSharePopup":true},"user":{"fkey":"068fe6631013432cda622cac7cff7381","isRegistered":true,"userType":3,"userId":614285,"accountId":304653,"gravatar":"<div class=\"gravatar-wrapper-32\"><img src=\"https://www.gravatar.com/avatar/36d4d0dbf3961b193e70a3933cf2ffa9?s=32&d=identicon&r=PG\" alt=\"\" width=\"32\" height=\"32\"></div>","profileUrl":"http://stackoverflow.com/users/614285/anand-s","notificationsUnviewedCount":0,"inboxUnviewedCount":0}});
-	StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"26408058d47a","js/moderator.en.js":"e28c737d71c2","js/full-anon.en.js":"b66e2e146265","js/full.en.js":"2921dd301f33","js/wmd.en.js":"ae0ff40d9064","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"a6b0512aa4d7","js/help.en.js":"b5f40fd81205","js/tageditor.en.js":"132f230c502a","js/tageditornew.en.js":"272c93d7a225","js/inline-tag-editing.en.js":"48f13b102998","js/revisions.en.js":"6c7265ea9fa1","js/review.en.js":"cbe22ea1444f","js/tagsuggestions.en.js":"b278f9a0b23b","js/post-validation.en.js":"f4247e3a17b7","js/explore-qlist.en.js":"257ba4cb7b04","js/events.en.js":"4b38823d5899","js/keyboard-shortcuts.en.js":"e98dcdf15629","js/external-editor.en.js":"bc276cc6e2cd","js/external-editor.en.js":"bc276cc6e2cd","js/snippet-javascript.en.js":"b71d0faec9c4","js/snippet-javascript-codemirror.en.js":"1755f339dede"});
-	StackExchange.using("gps", function() {
-		StackExchange.gps.init(true);
-	});
-</script>
-<script async type="text/javascript" src="{{ url_for('static', filename='js/so/full.en.js') }}"></script>
-<script async type="text/javascript" src="{{ url_for('static', filename='js/so/tageditornew.en.js') }}"></script>
-<script async type="text/javascript" src="{{ url_for('static', filename='js/so/tagsuggestions.en.js') }}"></script>
-<script async type="text/javascript" src="{{ url_for('static', filename='js/so/wmd-en.js') }}"></script>
-<script async type="text/javascript" src="{{ url_for('static', filename='js/so/external-editor.en.js') }}"></script>
-<script async type="text/javascript" src="{{ url_for('static', filename='js/so/snippet-javascript.en.js') }}"></script>
+<style type="text/css">
+	.hidden {
+		display: none;
+	} 
+</style>
 {% endblock %}
 
 {% block content %}
-<div id="mainbar" class="ask-mainbar">
+<div id="content" class="snipped-hidden">
+	<div itemscope="" itemtype="http://schema.org/Question">
+		<div id="question-header">
+			<h1 itemprop="name"><a href="/questions/26969773/request-dispatcher-causing-get-of-jquery-to-alert-the-text-of-the-page" class="question-hyperlink">Request Dispatcher causing $.get of jQuery to alert the text of the page</a></h1>
+		</div>
 
-	<form id="post-form" class="post-form" action="/questions/ask/submit" method="post">
-		<input type="hidden" name="qualityBanWarningShown" value="False">
-		<input type="hidden" name="priorAttemptCount" value="0"> 
-		<div id="question-form">
-			<div style="position: relative;"> 
-				<div class="form-item ask-title">
-					<table class="ask-title-table">
-						<tbody><tr>
-							<td class="ask-title-cell-key">
-								<label for="title">Title</label>
-							</td>
-							<td class="ask-title-cell-value">
-								<input type="text" maxlength="300" tabindex="100" class="actual-edit-overlay" data-min-length="15" data-max-length="150" autocomplete="off" style="opacity: 1; position: absolute; color: black; -webkit-text-fill-color: black; width: 610px; height: 15px; line-height: normal; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: start; border: 1px solid rgb(153, 153, 153); background-color: white;" disabled="disabled"><input id="title" name="title" type="text" maxlength="300" tabindex="100" class="ask-title-field edit-field-overlayed" data-min-length="15" data-max-length="150" autocomplete="off" style="opacity: 0.4; z-index: 1; position: relative;">                        
-								<span class="edit-field-overlay">What's your programming question? Be specific.</span>
+		<div id="mainbar">
+			<div class="question" data-questionid="26969773" id="question">
+
+				<table>
+					<tbody><tr>
+						<td class="votecell">
+							
+
+							<div class="vote">
+								<input type="hidden" name="_id_" value="26969773">
+								<a class="vote-up-off" title="This question shows research effort; it is useful and clear">up vote</a>
+								<span itemprop="upvoteCount" class="vote-count-post " title="View upvote and downvote totals" style="cursor: pointer;">8</span>
+								<a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful">down vote</a>
+								
+								<a class="star-off" href="#" title="This is a favorite question (click again to undo)">favorite</a>
+								<div class="favoritecount"><b>1</b></div>   
+
+							</div>
+
+						</td>
+						
+						<td class="postcell">
+							<div>
+								<div class="post-text" itemprop="text">
+
+									<p>for example :</p>
+
+									<p>i have a js like : </p>
+
+									<pre class="lang-java prettyprint prettyprinted"><code><span class="pln">$</span><span class="pun">.</span><span class="pln">get</span><span class="pun">(</span><span class="str">'Test_Controller.html'</span><span class="pun">,</span><span class="pln">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">){</span><span class="pln"> 
+										alert</span><span class="pun">(</span><span class="pln">response</span><span class="pun">);</span><span class="pln">
+									</span><span class="pun">});</span></code></pre>
+
+									<p>and in my <code>Test_Controller.html</code> servlet i have :</p>
+
+									<pre class="lang-java prettyprint prettyprinted"><code><span class="pln">    request</span><span class="pun">.</span><span class="pln">setAttribute</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">,</span><span class="str">"testData"</span><span class="pun">);</span><span class="pln">
+									</span><span class="typ">RequestDispatcher</span><span class="pln"> requestDispatcher </span><span class="pun">=</span><span class="pln">
+									request</span><span class="pun">.</span><span class="pln">getRequestDispatcher</span><span class="pun">(</span><span class="str">"/test.jsp"</span><span class="pun">);</span><span class="pln">
+									requestDispatcher</span><span class="pun">.</span><span class="pln">forward</span><span class="pun">(</span><span class="pln">request</span><span class="pun">,</span><span class="pln">response</span><span class="pun">);</span></code></pre>
+
+									<p>Question is : </p>
+
+									<p>why is that the <code>response</code> will always alert the text content of the <code>test.jsp</code> and not the <code>JSON</code> that i passed through the <code>getWriter()</code></p>
+
+									<p><strong>EDIT :</strong></p>
+
+									<p>I need to get the : </p>
+
+									<pre class="lang-java prettyprint prettyprinted"><code><span class="pln">  </span><span class="typ">TestData</span><span class="pln"> testData </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">TestData</span><span class="pun">();</span><span class="pln">
+										request</span><span class="pun">.</span><span class="pln">setAttribute</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">,</span><span class="pln">testData</span><span class="pun">);</span></code></pre>
+
+										<p>using jQuery's $.get() so the page won't reload, but unfortunately when i didn't do dispatch my response object seems to be null and when i do dispatch and forward, when i alert the response it alerts the text of the page.</p>
+
+									</div>
+									<div class="post-taglist">
+										<a href="/questions/tagged/java" class="post-tag js-gps-track" title="" rel="tag">java</a> <a href="/questions/tagged/jquery" class="post-tag js-gps-track" title="show questions tagged 'jquery'" rel="tag">jquery</a> <a href="/questions/tagged/ajax" class="post-tag js-gps-track" title="show questions tagged 'ajax'" rel="tag">ajax</a> <a href="/questions/tagged/servlets" class="post-tag js-gps-track" title="show questions tagged 'servlets'" rel="tag">servlets</a> <a href="/questions/tagged/get" class="post-tag js-gps-track" title="show questions tagged 'get'" rel="tag">get</a> 
+									</div>
+									<table class="fw">
+										<tbody><tr>
+											<td class="vt">
+												<div class="post-menu"><a href="/q/26969773/614285" title="short permalink to this question" class="short-link" id="link-post-26969773">share</a><span class="lsep">|</span><a href="/posts/26969773/edit" class="suggest-edit-post" title="revise and improve this post">edit</a><span class="lsep">|</span><a href="#" class="flag-post-link" title="flag this post for serious problems or moderator attention" data-postid="26969773">flag</a></div>        
+											</td>
+											<td align="right" class="post-signature">
+												<div class="user-info ">
+													<div class="user-action-time">
+														<a href="/posts/26969773/revisions" title="show all edits to this post">edited <span title="2014-11-20 09:57:12Z" class="relativetime">Nov 20 at 9:57</span></a>
+													</div>
+													<div class="user-gravatar32">
+														
+													</div>
+													<div class="user-details">
+														<br>
+														
+													</div>
+												</div>    </td>
+												<td class="post-signature owner">
+													<div class="user-info user-hover">
+														<div class="user-action-time">
+															asked <span title="2014-11-17 09:46:41Z" class="relativetime">Nov 17 at 9:46</span>
+														</div>
+														<div class="user-gravatar32">
+															<a href="/users/3706101/yaje"><div class="gravatar-wrapper-32"><img src="http://i.stack.imgur.com/QtyxD.jpg?s=32&amp;g=1" alt="" width="32" height="32"></div></a>
+														</div>
+														<div class="user-details">
+															<a href="/users/3706101/yaje">Yaje</a><br>
+															<span class="reputation-score" title="reputation score " dir="ltr">1,593</span><span title="5 silver badges"><span class="badge2"></span><span class="badgecount">5</span></span><span title="20 bronze badges"><span class="badge3"></span><span class="badgecount">20</span></span>
+														</div>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</td>
 						</tr>
-					</tbody></table>
-					<div id="question-suggestions">
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+		
+		<div id="sidebar" class="show-votes">
+			<div class="module question-stats">
+				<table id="qinfo">
+					<tbody><tr>
+						<td>
+							<p class="label-key">asked</p>
+						</td>
+						<td style="padding-left: 10px">
+							<p class="label-key" title="2014-11-17 09:46:41Z"><b>9 days ago</b></p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="label-key">viewed</p>
+						</td>
+
+						<td style="padding-left: 10px">
+							<p class="label-key">
+								<b>160 times</b>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p class="label-key">active</p>
+						</td>
+						<td style="padding-left: 10px">
+							<p class="label-key"><b><a href="?lastactivity" class="lastactivity-link" title="2014-11-25 09:39:59Z">yesterday</a></b></p>
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+			<div class="module community-bulletin" data-tracker="cb=1">
+				<div class="related">
+					<div class="bulletin-title">
+						Blog
+					</div>
+					<hr>
+					<div class="spacer">
+						<div class="bulletin-item-type">
+							<a href="http://blog.stackoverflow.com/2014/11/podcast-61-the-what-jays-done-wrong-podcast/?cb=1" class="question-hyperlink">
+								<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
+							</div>
+							<div class="bulletin-item-content">
+								<a href="http://blog.stackoverflow.com/2014/11/podcast-61-the-what-jays-done-wrong-podcast/?cb=1" class="question-hyperlink">Podcast #61 – The “What Jay’s Done Wrong” Podcast</a>
+							</div>
+							<br class="cbt">
+						</div>
+						<div class="bulletin-title">
+							Hot Meta Posts
+						</div>
+						<hr>
+						<div class="spacer">
+							<div class="bulletin-item-type">
+								<span title="Vote score (upvotes - downvotes)">6</span>
+							</div>
+							<div class="bulletin-item-content">
+								<a href="http://meta.stackoverflow.com/questions/277950/is-a-question-a-duplicate-if-the-duplicate-has-no-answers?cb=1" class="question-hyperlink">Is a question a duplicate if the duplicate has no answers?</a>
+							</div>
+							<br class="cbt">
+						</div>
+						<div class="spacer">
+							<div class="bulletin-item-type">
+								<span title="Vote score (upvotes - downvotes)">20</span>
+							</div>
+							<div class="bulletin-item-content">
+								<a href="http://meta.stackoverflow.com/questions/277896/reference-style-markdown-links-being-misidentified-as-code-your-post-appears-t?cb=1" class="question-hyperlink">Reference style markdown links being misidentified as code: "Your post appear…</a>
+							</div>
+							<br class="cbt">
+						</div>
+						<div class="spacer">
+							<div class="bulletin-item-type">
+								<span title="Vote score (upvotes - downvotes)">17</span>
+							</div>
+							<div class="bulletin-item-content">
+								<a href="http://meta.stackoverflow.com/questions/277891/should-we-automatically-detect-pastebin-and-other-related-sites?cb=1" class="question-hyperlink">Should we automatically detect pastebin (and other related) sites?</a>
+							</div>
+							<br class="cbt">
+						</div>
+					</div>
+				</div>			
+				<script>
+					var ados = ados || {};ados.run = ados.run || [];
+					ados.run.push(function() { ados_add_placement(22,8277,"adzerk1200938078",[17,2221]).setZone(45) ; });                    
+				</script>
+				<div class="everyonelovesstackoverflow" id="adzerk1200938078">
+				</div>  
+
+
+				<div class="module sidebar-related">
+					<h4 id="h-related">Related</h4>
+					<div class="related js-gps-related-questions" data-tracker="rq=1">
+						<div class="spacer js-gps-track">
+							<a href="http://stackoverflow.com/q/503093?rq=1" title="Vote score (upvotes - downvotes)">
+								<div class="answer-votes answered-accepted extra-large">2996
+								</div>
+							</a><a href="http://stackoverflow.com/questions/503093/how-can-i-make-a-redirect-page-in-jquery-javascript?rq=1" class="question-hyperlink">How can I make a redirect page in jQuery/JavaScript?</a>
+						</div>
+						<div class="spacer js-gps-track">
+							<a href="http://stackoverflow.com/q/5520954?rq=1" title="Vote score (upvotes - downvotes)">
+								<div class="answer-votes default">0
+								</div>
+							</a><a href="http://stackoverflow.com/questions/5520954/jquery-ajax-get-request-works-post-request-displays-blank-page?rq=1" class="question-hyperlink">Jquery/Ajax get request works, post request displays blank page</a>
+						</div>
+						<div class="spacer js-gps-track">
+							<a href="http://stackoverflow.com/q/12662151?rq=1" title="Vote score (upvotes - downvotes)">
+								<div class="answer-votes answered-accepted default">0
+								</div>
+							</a><a href="http://stackoverflow.com/questions/12662151/ajax-request-for-login-not-working-using-post-method-in-jquery?rq=1" class="question-hyperlink">Ajax request for login not working using $.post() method in jquery</a>
+						</div>
+						<div class="spacer js-gps-track">
+							<a href="http://stackoverflow.com/q/17696051?rq=1" title="Vote score (upvotes - downvotes)">
+								<div class="answer-votes answered-accepted default">1
+								</div>
+							</a><a href="http://stackoverflow.com/questions/17696051/how-to-redirect-forward-request-to-another-jsp-page-in-servlet-called-by-ajax?rq=1" class="question-hyperlink">How to redirect/forward request to another jsp page in servlet called by $.ajax() function</a>
+						</div>
+						
+
 					</div>
 				</div>
 			</div>
 
-			<script>
-				StackExchange.ifUsing("editor", function () {
-					StackExchange.using("externalEditor", function () {
-						StackExchange.using("snippets", function () {
-							StackExchange.snippets.init();
-						});
-					});
-				}, "code-snippets");
-			</script>
+		</div>
 
+	</div>
 
-			<script>
-				StackExchange.ready(function() {
-					StackExchange.using("tagEditor", function () { StackExchange.tagEditor.ready.done(initFadingHelpText); });
-					initTagRenderer("".split(" "), "".split(" "));
+	<div id="mainbar">
+		<div class="subheader">
+			<h1 id="h-users">Expert Users</h1>
 
-					StackExchange.using("externalEditor", function() {
-            // Have to fire editor after snippets, if snippets enabled
-            if (StackExchange.options.snippets.enabled) {
-            	StackExchange.using("snippets", function() {
-            		createEditor();
-            	});
-            }
-            else {
-            	createEditor();
-            }
-        });
+			<div id="tabs">
+				<a class="youarehere js-tab" href=".immediate-responders" title="Users with the highest reputation scores">Immediate Responders</a>
+				<a class="js-tab" href=".authoritative-responders" title="Users who joined in the last 30 days">Authoritative  Responders</a>
+			</div>
+		</div>
 
-					function createEditor() {
-						prepareEditor({
-							heartbeatType: 'ask',
-							bindNavPrevention: true,
-							postfix: "",
-							onDemand: false,
-							discardSelector: ".discard-question"
-
-						});
-
-
-					}
-				});  
-			</script>
-
-
-			<div id="post-editor" class="post-editor">
-
-				<div style="position: relative;">     
-					<div class="wmd-container">
-						<div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li class="wmd-button" id="wmd-bold-button" title="Strong <strong> Ctrl+B" style="left: 0px;"><span style="background-position: 0px 0px;"></span></li><li class="wmd-button" id="wmd-italic-button" title="Emphasis <em> Ctrl+I" style="left: 25px;"><span style="background-position: -20px 0px;"></span></li><li class="wmd-spacer wmd-spacer1" id="wmd-spacer1"></li><li class="wmd-button" id="wmd-link-button" title="Hyperlink <a> Ctrl+L" style="left: 75px;"><span style="background-position: -40px 0px;"></span></li><li class="wmd-button" id="wmd-quote-button" title="Blockquote <blockquote> Ctrl+Q" style="left: 100px;"><span style="background-position: -60px 0px;"></span></li><li class="wmd-button" id="wmd-code-button" title="Code Sample <pre><code> Ctrl+K" style="left: 125px;"><span style="background-position: -80px 0px;"></span></li><li class="wmd-button" id="wmd-image-button" title="Image <img> Ctrl+G" style="left: 150px;"><span style="background-position: -100px 0px;"></span></li><li class="wmd-button wmd-snippet-button" style="left:175px" id="wmd-snippet-button" title="Code snippet Ctrl-M"><span style="background-image: url(http://stackoverflow.com/content/balsamiq/wmd-mockup-button.png?v=5);"></span></li><li class="wmd-spacer wmd-spacer2" id="wmd-spacer2" style="left: 200px;"></li><li class="wmd-button" id="wmd-olist-button" title="Numbered List <ol> Ctrl+O" style="left: 225px;"><span style="background-position: -120px 0px;"></span></li><li class="wmd-button" id="wmd-ulist-button" title="Bulleted List <ul> Ctrl+U" style="left: 250px;"><span style="background-position: -140px 0px;"></span></li><li class="wmd-button" id="wmd-heading-button" title="Heading <h1>/<h2> Ctrl+H" style="left: 275px;"><span style="background-position: -160px 0px;"></span></li><li class="wmd-button" id="wmd-hr-button" title="Horizontal Rule <hr> Ctrl+R" style="left: 300px;"><span style="background-position: -180px 0px;"></span></li><li class="wmd-spacer wmd-spacer3" id="wmd-spacer3" style="left: 325px;"></li><li class="wmd-button" id="wmd-undo-button" title="Undo - Ctrl+Z" style="left: 350px;"><span style="background-position: -200px -20px;"></span></li><li class="wmd-button" id="wmd-redo-button" title="Redo - Ctrl+Shift+Z" style="left: 375px;"><span style="background-position: -220px -20px;"></span></li><li class="wmd-button wmd-help-button" id="wmd-help-button" title="Markdown Editing Help" style="right: 0px;"><span style="background-position: -240px 0px;"></span></li></ul></div>
-						<textarea id="wmd-input" class="wmd-input processed" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
-						<div class="grippie" style="margin-right: -8px;"></div></div>
-					</div>
-
-					<div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
-					<div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
-
-					<div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
-
-
-
-					<div id="wmd-preview" class="wmd-preview"></div>
-					<div></div>
-					<div class="edit-block">
-						<input id="fkey" name="fkey" type="hidden" value="068fe6631013432cda622cac7cff7381">
-						<input id="author" name="author" type="text">
-					</div>
-				</div>
-
-				<div style="position: relative;"> 
-
-					<script>
-						StackExchange.using("tagEditor", function () {
-							initTagRenderer("".split(" "), "".split(" "));
-							StackExchange.tagEditor($("#tagnames"));
-						});
-					</script>	
-
-					<div style="position: relative;"> 
-						<div class="form-item">
-							<label>Tags</label>
-							<input id="tagnames" name="tagnames" type="text" size="60" value="" tabindex="103" style="display: none;"><div class="actual-edit-overlay" style="width: 666px; height: 27px; opacity: 1; position: absolute; color: black; -webkit-text-fill-color: black; line-height: 27px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: start; border: 1px solid rgb(153, 153, 153); background-color: white;" disabled="disabled">&nbsp;at least one tag such as (html5 android forms), max 5 tags</div><div class="tag-editor edit-field-overlayed" style="width: 666px; height: 27px; opacity: 0.4; z-index: 1; position: relative;"><span></span><input type="text" tabindex="103" style="width: 658px;"><span></span></div>
-							<span class="edit-field-overlay">
-								at least one tag such as (html5 android forms), max 5 tags    </span>
-							</div>
-						</div>
-
-						<div id="tag-suggestions"></div>
-						<script>
-							StackExchange.using("tagSuggestions", function () {
-								StackExchange.tagSuggestions.init();
-							});
-						</script>
-
-
-					</div>
-
-					<div id="question-only-section">
-
-						<div class="form-submit cbt">
-							<input id="submit-button" type="submit" value="Post Your Question" tabindex="120">
-							<a href="#" class="discard-question dno">discard</a>
-
-						</div>
-					</div>
-				</div>
-
-				<div id="answer-from-ask-form-item" class="form-item">
-					<input type="checkbox" id="answer-from-ask" name="answer-from-ask"> <label for="answer-from-ask" style="display: inline;">Answer your own question</label> – <a href="http://blog.stackoverflow.com/2011/07/its-ok-to-ask-and-answer-your-own-questions/" target="_blank">share your knowledge, Q&amp;A-style</a>
-				</div>
-				<div id="question-answer-section" class="dno">
-					<div id="inline-answer" style="margin-bottom: 20px;">
-
-
-
-						<script>
-							StackExchange.ifUsing("editor", function () {
-								StackExchange.using("externalEditor", function () {
-									StackExchange.using("snippets", function () {
-										StackExchange.snippets.init();
-									});
-								});
-							}, "code-snippets");
-						</script>
-
-
-						<script>
-							StackExchange.ready(function() {
-								StackExchange.using("tagEditor", function () { StackExchange.tagEditor.ready.done(initFadingHelpText); });
-								initTagRenderer("".split(" "), "".split(" "));
-
-								StackExchange.using("externalEditor", function() {
-            // Have to fire editor after snippets, if snippets enabled
-            if (StackExchange.options.snippets.enabled) {
-            	StackExchange.using("snippets", function() {
-            		createEditor();
-            	});
-            }
-            else {
-            	createEditor();
-            }
-        });
-
-								function createEditor() {
-									prepareEditor({
-										heartbeatType: '',
-										bindNavPrevention: true,
-										postfix: "-42",
-										onDemand: false,
-										discardSelector: ".discard-question"
-										,postId:42
-									});
-
-
-								}
-							});  
-						</script>
-
-
-						<div id="post-editor-42" class="post-editor">
-
-							<div style="position: relative;">     
-								<div class="wmd-container">
-									<div id="wmd-button-bar-42" class="wmd-button-bar"></div>
-									<textarea id="wmd-input-42" class="wmd-input" name="post-text-answer" cols="92" rows="15" tabindex="103" data-min-length=""></textarea>
+		<div id="user-browser" class="immediate-responders">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/548225/anubhava"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/dab08478b226280d4a30894c9a7ed719?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/548225/anubhava">anubhava</a><br>
+									<span class="user-location">Bangalore, India</span><br>
+									<span class="reputation-score" title="reputation this week: 1848 total reputation: 206841" dir="ltr">1,848</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/regex">regex</a>, <a href="questions/tagged/.htaccess">.htaccess</a>, <a href="questions/tagged/bash">bash</a>
 								</div>
 							</div>
-
-							<div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
-							<div id="draft-saved-42" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
-
-							<div id="draft-discarded-42" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
-
-							<div class="community-option">
-								<input id="communitymode-42" name="communitymode" type="checkbox">
-								<label for="communitymode-42" title="Marking an answer community wiki encourages others to edit it by lowering the reputation barrier required to edit. However, you will not gain any upvote reputation from it. This cannot be undone.">community wiki</label>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/1144035/gordon-linoff"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/e514b017977ebf742a418cac697d8996?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/1144035/gordon-linoff">Gordon Linoff</a><br>
+									<span class="user-location">New York, United States</span><br>
+									<span class="reputation-score" title="reputation this week: 1800 total reputation: 234850" dir="ltr">1,800</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/sql">sql</a>, <a href="questions/tagged/mysql">mysql</a>, <a href="questions/tagged/sql-server">sql-server</a>
+								</div>
 							</div>
-
-
-							<div id="wmd-preview-42" class="wmd-preview"></div>
-							<div></div>
-						</div>
-					</div>
-
-
-					<div class="form-submit cbt">
-						<input id="submit-button-42" type="submit" value="Post Your Question And Answer" tabindex="120">
-						<a href="#" class="discard-question dno">discard</a>
-					</div>
-				</div>
-			</form>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/100297/martijn-pieters"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/24780fb6df85a943c7aea0402c843737?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/100297/martijn-pieters">Martijn Pieters</a><br>
+									<span class="user-location">Cambridge, United Kingdom</span><br>
+									<span class="reputation-score" title="reputation this week: 1495 total reputation: 308408" dir="ltr">1,495</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/python">python</a>, <a href="questions/tagged/python-3.x">python-3.x</a>, <a href="questions/tagged/list">list</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/22656/jon-skeet"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/6d8ebb117e8d83d74ea95fbdd0f87e13?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/22656/jon-skeet">Jon Skeet</a><br>
+									<span class="user-location">Reading, United Kingdom</span><br>
+									<span class="reputation-score" title="reputation this week: 1450 total reputation: 730179" dir="ltr">1,450</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/java">java</a>, <a href="questions/tagged/c%23">c#</a>, <a href="questions/tagged/multithreading">multithreading</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/335858/dasblinkenlight"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/4af3541c00d591e9a518b9c0b3b1190a?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/335858/dasblinkenlight">dasblinkenlight</a><br>
+									<span class="user-location">United States</span><br>
+									<span class="reputation-score" title="reputation this week: 1435 total reputation: 293256" dir="ltr">1,435</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/java">java</a>, <a href="questions/tagged/c">c</a>, <a href="questions/tagged/c%23">c#</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/3297613/avinash-raj"><div class="gravatar-wrapper-48"><img src="http://i.stack.imgur.com/gwZHo.jpg?s=48&amp;g=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/3297613/avinash-raj">Avinash Raj</a><br>
+									<span class="user-location">Tamil Nadu, India</span><br>
+									<span class="reputation-score" title="reputation this week: 1409 total reputation: 39675" dir="ltr">1,409</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/regex">regex</a>, <a href="questions/tagged/python">python</a>, <a href="questions/tagged/bash">bash</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/6309/vonc"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/7aa22372b695ed2b26052c340f9097eb?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/6309/vonc">VonC</a><br>
+									<span class="user-location">France</span><br>
+									<span class="reputation-score" title="reputation this week: 1360 total reputation: 447290" dir="ltr">1,360</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/git">git</a>, <a href="questions/tagged/eclipse">eclipse</a>, <a href="questions/tagged/github">github</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/85371/sehe"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/6d52c235ec6dd15f30bab444103e7af2?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/85371/sehe">sehe</a><br>
+									<span class="user-location">Netherlands</span><br>
+									<span class="reputation-score" title="reputation this week: 1323 total reputation: 135020" dir="ltr">1,323</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c%2b%2b">c++</a>, <a href="questions/tagged/boost">boost</a>, <a href="questions/tagged/boost-spirit">boost-spirit</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/2940792/hon2a"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/8eeba1efc3557e0bc037216404383114?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/2940792/hon2a">hon2a</a><br>
+									<span class="user-location"></span><br>
+									<span class="reputation-score" title="reputation this week: 1261 total reputation: 1622" dir="ltr">1,261</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/javascript">javascript</a>, <a href="questions/tagged/angularjs">angularjs</a>, <a href="questions/tagged/jquery">jquery</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/157882/balusc"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/89927e2f4bde24991649b353a37678b9?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/157882/balusc">BalusC</a><br>
+									<span class="user-location">Amsterdam, Netherlands</span><br>
+									<span class="reputation-score" title="reputation this week: 1195 total reputation: 524808" dir="ltr">1,195</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/java">java</a>, <a href="questions/tagged/jsf">jsf</a>, <a href="questions/tagged/jsf-2">jsf-2</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/14860/paxdiablo"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/90577b5275e1d208483b844f91a4be3a?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/14860/paxdiablo">paxdiablo</a><br>
+									<span class="user-location"></span><br>
+									<span class="reputation-score" title="reputation this week: 1157 total reputation: 366483" dir="ltr">1,157</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c%2b%2b">c++</a>, <a href="questions/tagged/c">c</a>, <a href="questions/tagged/java">java</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/157247/t-j-crowder"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/ca3e484c121268e4c8302616b2395eb9?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/157247/t-j-crowder">T.J. Crowder</a><br>
+									<span class="user-location">United Kingdom</span><br>
+									<span class="reputation-score" title="reputation this week: 1149 total reputation: 313334" dir="ltr">1,149</span>
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/javascript">javascript</a>, <a href="questions/tagged/jquery">jquery</a>, <a href="questions/tagged/java">java</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
-		<div id="sidebar" class="ask-sidebar">
-			<div id="scroller-anchor"></div>
-			<div id="scroller" style="position: relative; width: 270px;">
-				<div class="module newuser sidebar-help" id="how-to-title">
-					<h4>How to Ask</h4>
-					<p><b>Is your question about programming?</b></p><p>We prefer questions that can be <i>answered</i>, not just discussed.</p><p>Provide details. Share your research.</p><p>If your question is about this website, <b><a href="http://meta.stackoverflow.com">ask it on meta</a></b> instead.</p><p class="ar"><a href="/help">visit the help center »</a><br><a href="/help/how-to-ask">asking help »</a></p>
-				</div>
-				<div class="module newuser sidebar-help" id="how-to-format" style="display: none;">
-					<h4>How to Format</h4>        
-					<p><span class="dingus">►</span> put returns between paragraphs</p>
-					<p><span class="dingus">►</span> for linebreak add 2 spaces at end</p>
-					<p><span class="dingus">►</span> <i>_italic_</i> or <b>**bold**</b></p>
-					<p><span class="dingus">►</span> indent code by 4 spaces</p>
-					<p><span class="dingus">►</span> backtick escapes <code>`like _so_`</code></p>
-					<p><span class="dingus">►</span> quote by placing &gt; at start of line</p>
-					<p><span class="dingus">►</span> to make links</p>
-					<p>&lt;http://foo.com&gt;<br>[foo](http://foo.com)<br>&lt;a href="http://foo.com"&gt;foo&lt;/a&gt;</p>
-					<p><span class="dingus">►</span> <a href="http://meta.stackexchange.com/questions/1777/what-html-tags-are-allowed" target="_blank">basic HTML</a> also allowed</p>
-					<p class="ar">
-						<a href="/editing-help" target="_edithelp">formatting help »</a><br>
-						<a href="/questions/how-to-ask">asking help »</a>
-					</p>
-				</div>
-				<div class="module newuser sidebar-help" id="how-to-tag" style="display: none;">
-					<h4>How to Tag</h4>
-					<p>A tag is a keyword or label that categorizes your question with other, similar questions.</p>    
-					<p><span class="dingus">►</span> favor existing popular tags; avoid creating new tags</p>
-					<p><span class="dingus">►</span> use common abbreviations</p>
-					<p><span class="dingus">►</span> don't include synonyms</p>
-					<p><span class="dingus">►</span> combine multiple words into single-words with dashes</p>
-					<p><span class="dingus">►</span> maximum of 5 tags, 25 chars per tag</p>
-					<p><span class="dingus">►</span> tag characters: [a-z 0-9 + # - .]</p>
-					<p><span class="dingus">►</span> delimit tags by space, semicolon, or comma</p>
-					<p class="ar"><a href="/tags">popular tags »</a></p>
-				</div>    
+		<div id="user-browser" class="authoritative-responders hidden">
+			<table>
+				<tbody>
+					<tr>        
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/4192931/js1"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/c26d448bf8935cf10be612180b85ffc7?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4192931/js1">JS1</a><br>
+									<span class="user-location"></span><br>
+									1347 in 30 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c">c</a>, <a href="questions/tagged/arrays">arrays</a>, <a href="questions/tagged/c%2b%2b">c++</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/4236136/casey-rule"><div class="gravatar-wrapper-48"><img src="http://i.stack.imgur.com/z4Dnp.jpg?s=48&amp;g=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4236136/casey-rule">Casey Rule</a><br>
+									<span class="user-location">Bethlehem, PA</span><br>
+									1232 in 18 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/jquery">jquery</a>, <a href="questions/tagged/javascript">javascript</a>, <a href="questions/tagged/html">html</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/4195328/ianaya89"><div class="gravatar-wrapper-48"><img src="https://lh6.googleusercontent.com/-N7dqDDFWCRE/AAAAAAAAAAI/AAAAAAAAGpw/pSJWJ4Thnag/photo.jpg?sz=48" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4195328/ianaya89">ianaya89</a><br>
+									<span class="user-location">Buenos Aires, Argentina</span><br>
+									1128 in 30 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/javascript">javascript</a>, <a href="questions/tagged/jquery">jquery</a>, <a href="questions/tagged/html">html</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="user-info  user-hover">
+								<div class="user-gravatar48">
+									<a href="/users/4251546/vsevolod-goloviznin"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/adee0787c93711e13244a8547e1316cc?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4251546/vsevolod-goloviznin">Vsevolod Goloviznin</a><br>
+									<span class="user-location">Sevastopol, Russia</span><br>
+									1038 in 14 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c%23">c#</a>, <a href="questions/tagged/asp.net-mvc">asp.net-mvc</a>, <a href="questions/tagged/visual-studio">visual-studio</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4233758/aleksandar"><div><img src="https://www.gravatar.com/avatar/ee959dac5e28fc23d0c8ddf83cc1a9b0?s=48&amp;d=identicon&amp;r=PG&amp;f=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4233758/aleksandar">Aleksandar</a><br>
+									<span class="user-location">Slovenia</span><br>
+									930 in 19 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c%2b%2b">c++</a>, <a href="questions/tagged/performance">performance</a>, <a href="questions/tagged/c%2b%2b11">c++11</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4231110/justinhoward"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/7525da44a40ab0d4e5e88a6e6d0b55de?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4231110/justinhoward">justinhoward</a><br>
+									<span class="user-location">Portland, OR</span><br>
+									917 in 20 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/composer-php">composer-php</a>, <a href="questions/tagged/php">php</a>, <a href="questions/tagged/git">git</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4275347/michael-laszlo"><div class="gravatar-wrapper-48"><img src="http://i.stack.imgur.com/CdbsN.jpg?s=48&amp;g=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4275347/michael-laszlo">Michael Laszlo</a><br>
+									<span class="user-location">Kitchener, Ontario</span><br>
+									770 in 8 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/javascript">javascript</a>, <a href="questions/tagged/c">c</a>, <a href="questions/tagged/python">python</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4209604/michael-zucchetta"><div><img src="https://www.gravatar.com/avatar/75dfb60b0ac0727b37393ad8f594eb2e?s=48&amp;d=identicon&amp;r=PG&amp;f=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4209604/michael-zucchetta">Michael Zucchetta</a><br>
+									<span class="user-location">Venice, Italy</span><br>
+									769 in 25 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/angularjs">angularjs</a>, <a href="questions/tagged/javascript">javascript</a>, <a href="questions/tagged/html">html</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4230704/steve-lillis"><div class="gravatar-wrapper-48"><img src="http://i.stack.imgur.com/uLjiE.png?s=48&amp;g=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4230704/steve-lillis">Steve Lillis</a><br>
+									<span class="user-location">London</span><br>
+									755 in 20 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c%23">c#</a>, <a href="questions/tagged/.net">.net</a>, <a href="questions/tagged/asp.net">asp.net</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4241535/chrismas007"><div class="gravatar-wrapper-48"><img src="https://www.gravatar.com/avatar/b1fce746f77b5beac922733e4891f4be?s=48&amp;d=identicon&amp;r=PG" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4241535/chrismas007">Chrismas007</a><br>
+									<span class="user-location">Chicago</span><br>
+									697 in 17 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/vba">vba</a>, <a href="questions/tagged/excel">excel</a>, <a href="questions/tagged/excel-vba">excel-vba</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4269149/sarthak-mittal"><div><img src="https://www.gravatar.com/avatar/e983a8c2b4f3439c65fbb58ebc9c1a0c?s=48&amp;d=identicon&amp;r=PG&amp;f=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4269149/sarthak-mittal">Sarthak Mittal</a><br>
+									<span class="user-location"></span><br>
+									671 in 9 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/java">java</a>, <a href="questions/tagged/android">android</a>, <a href="questions/tagged/arrays">arrays</a>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="user-info ">
+								<div class="user-gravatar48">
+									<a href="/users/4200092/gobusto"><div class="gravatar-wrapper-48"><img src="http://i.stack.imgur.com/wMkFf.png?s=48&amp;g=1" alt="" width="48" height="48"></div></a>
+								</div>
+								<div class="user-details">
+									<a href="/users/4200092/gobusto">GoBusto</a><br>
+									<span class="user-location">UK</span><br>
+									645 in 29 days
+								</div>
+								<div class="user-tags">
+									<a href="questions/tagged/c">c</a>, <a href="questions/tagged/c%2b%2b">c++</a>, <a href="questions/tagged/python">python</a>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody></table>
 			</div>
-			<script>
-				StackExchange.ready(function () { moveScroller(); });
-				StackExchange.using("editor", function () {
-
-					var lengthCheckInterval = setInterval(function () {
-						if ($("#wmd-input").val().length >= 220) {
-							clearInterval(lengthCheckInterval);
-							StackExchange.cardiologist.beatASAP();
-						}
-					}, 3000);
-				});
-
-
-			</script>
-
 		</div>
-		{% endblock %}
+
+	</div>
+	{% endblock %}
+
+	{% block content_script %}
+	<script type="text/javascript">
+		$(function(){
+			$('.js-tab').click(function(){
+				var $this = $(this);
+				// if(!$this.hasClass('youarehere')){
+					
+					var $siblings = $this.addClass('youarehere').siblings('.js-tab');
+					$siblings.removeClass('youarehere');
+
+					console.log($siblings.attr('href'));
+
+					$($siblings.attr('href')).fadeOut(function(){
+						$(this).addClass('hidden');
+						$($this.attr('href')).fadeIn(function(){
+							$(this).removeClass('hidden');
+						});
+					});
+				// }
+
+				return false;
+			})
+		});
+	</script>
+	{% endblock %}

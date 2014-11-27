@@ -1,9 +1,9 @@
 #Flask dependencies
-from flask import Blueprint, request
+from flask import Blueprint, request, render_template
 
 # Define the blueprint: 'data', set its url prefix: app.url/data
-mod_response_time = Blueprint('response-time', __name__, url_prefix='/response-time')
+mod_response_time = Blueprint('response-time', __name__, url_prefix='/questions')
 
-@mod_response_time.route('/')
+@mod_response_time.route('/ask')
 def index():
-	return "Hello World!"
+	return render_template("mod_response_time/index.html")

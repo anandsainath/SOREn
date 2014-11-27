@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+
+{% block header_script %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/so/stub.en.js') }}"></script>
+
+<script>
+	StackExchange.ready(
+		function () {
+			StackExchange.using("postValidation", function () {
+				StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 1, 'question');
+			});
+
+			var suggestionTarget = $("#question-suggestions");
+			StackExchange.question.initTitleSearch($('#title'), suggestionTarget, 'Stack Overflow', function ($links) {
+				StackExchange.using('gps', function() {
+					StackExchange.gps.track('question_ask.suggestions_show', { });
+					$links.addClass('js-gps-track').data('gps-track', 'question_ask.suggestion_click');
+					StackExchange.gps.bindTrackClicks(suggestionTarget);
+				});
+			});
+
+
+			var $answerCheckbox = $('#answer-from-ask');
+			var editorInitialized = false;
+
+			function showAnswerSection(quick, callback) {
+				try
+				{
+					if (!editorInitialized) {
+                                //$("#question-answer-section").css("opacity", 0).removeClass("dno");
+                                $("#question-answer-section").removeClass("dno");
+                                // This line will throw an exception
+                                StackExchange.editor.finallyInit();
+                                editorInitialized = true;
+
+                                StackExchange.using("postValidation", function () {
+                                	StackExchange.postValidation.initOnBlur($("#question-answer-section"), 2, false);
+                                });
+                            }
+                            
+                            $('#question-answer-section, #answer-from-ask-form-item').fadeTo(quick ? 0 : 400, 1, callback);
+                        }
+                        catch (err)
+                        {
+                            // TODO: this never worked correctly. Long enough timeout that it will resolve eventually, yuck
+                            setTimeout(function () { showAnswerSection(quick, callback) }, 10);
+                        }
+                    }
+
+                    $answerCheckbox.change(function () {
+                    	if ($(this).is(':checked')) {
+                    		$('#question-only-section, #answer-from-ask-form-item').fadeOut(function () {
+                    			showAnswerSection(false, function () {
+                    				$('#wmd-input-42').focus();
+                    			});
+                    		});
+                    	}
+                    	else {
+                    		$('#question-answer-section, #answer-from-ask-form-item').fadeOut(function () {
+                    			$('#question-only-section, #answer-from-ask-form-item').fadeIn();
+                    		});
+                    	}
+                    });
+
+                    if ($answerCheckbox.is(':checked') || 0 > 0) {
+                    	$answerCheckbox.attr("checked", true);
+                    	$('#question-only-section').hide();
+                    	StackExchange.using("editor", function () {
+                    		setTimeout(function () { showAnswerSection(true) }, 2);
+                    	});
+                    }
+                    
+                }
+                );
+</script>
+
+<script>
+	StackExchange.using("gps", function () {
+		StackExchange.gps.track("question_ask.visit", { 'inbox_subscription': 2 });
+		var pending = [];
+		var send = StackExchange.helpers.DelayedReaction(function () {
+			StackExchange.gps.sendPending();
+		}, 3000);
+		var alreadySent = { "title_focus": 1 };
+		$("#title,#wmd-input,#tagnames").on("focus blur", function (evt) {
+			var what = { title: "title", "wmd-input": "body", "tagnames": "tags" }[this.id] + "_" + evt.type;
+			if (alreadySent[what])
+				return;
+			StackExchange.gps.track("question.action", { action_type: what }, true);
+			alreadySent[what] = 1;
+			send.trigger();
+		});
+	});
+</script>
+
+<script>
+	StackExchange.ready(function () {
+		StackExchange.realtime.init('wss://qa.sockets.stackexchange.com,ws://qa.sockets.stackexchange.com');
+		StackExchange.realtime.subscribeToInboxNotifications();
+		StackExchange.realtime.subscribeToReputationNotifications('1');
+		StackExchange.realtime.subscribeToTopBarNotifications('1');
+	});
+</script>
+<script>
+	StackExchange.init({"locale":"en","stackAuthUrl":"https://stackauth.com","serverTime":1417025992,"networkMetaHostname":"meta.stackexchange.com","routeName":"Questions/Ask","styleCode":true,"enableUserHovercards":true,"snippets":{"enabled":true,"domain":"stacksnippets.net"},"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","recaptchaAudioLang":"en","enableNewTagCreationWarning":true,"nonAsciiTags":true,"enableSocialMediaInSharePopup":true},"user":{"fkey":"068fe6631013432cda622cac7cff7381","isRegistered":true,"userType":3,"userId":614285,"accountId":304653,"gravatar":"<div class=\"gravatar-wrapper-32\"><img src=\"https://www.gravatar.com/avatar/36d4d0dbf3961b193e70a3933cf2ffa9?s=32&d=identicon&r=PG\" alt=\"\" width=\"32\" height=\"32\"></div>","profileUrl":"http://stackoverflow.com/users/614285/anand-s","notificationsUnviewedCount":0,"inboxUnviewedCount":0}});
+	StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"26408058d47a","js/moderator.en.js":"e28c737d71c2","js/full-anon.en.js":"b66e2e146265","js/full.en.js":"2921dd301f33","js/wmd.en.js":"ae0ff40d9064","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"a6b0512aa4d7","js/help.en.js":"b5f40fd81205","js/tageditor.en.js":"132f230c502a","js/tageditornew.en.js":"272c93d7a225","js/inline-tag-editing.en.js":"48f13b102998","js/revisions.en.js":"6c7265ea9fa1","js/review.en.js":"cbe22ea1444f","js/tagsuggestions.en.js":"b278f9a0b23b","js/post-validation.en.js":"f4247e3a17b7","js/explore-qlist.en.js":"257ba4cb7b04","js/events.en.js":"4b38823d5899","js/keyboard-shortcuts.en.js":"e98dcdf15629","js/external-editor.en.js":"bc276cc6e2cd","js/external-editor.en.js":"bc276cc6e2cd","js/snippet-javascript.en.js":"b71d0faec9c4","js/snippet-javascript-codemirror.en.js":"1755f339dede"});
+	StackExchange.using("gps", function() {
+		StackExchange.gps.init(true);
+	});
+</script>
+<script async type="text/javascript" src="{{ url_for('static', filename='js/so/full.en.js') }}"></script>
+<script async type="text/javascript" src="{{ url_for('static', filename='js/so/tageditornew.en.js') }}"></script>
+<script async type="text/javascript" src="{{ url_for('static', filename='js/so/tagsuggestions.en.js') }}"></script>
+<script async type="text/javascript" src="{{ url_for('static', filename='js/so/wmd-en.js') }}"></script>
+<script async type="text/javascript" src="{{ url_for('static', filename='js/so/external-editor.en.js') }}"></script>
+<script async type="text/javascript" src="{{ url_for('static', filename='js/so/snippet-javascript.en.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="mainbar" class="ask-mainbar">
+
+	<form id="post-form" class="post-form" action="/questions/ask/submit" method="post">
+		<input type="hidden" name="qualityBanWarningShown" value="False">
+		<input type="hidden" name="priorAttemptCount" value="0"> 
+		<div id="question-form">
+			<div style="position: relative;"> 
+				<div class="form-item ask-title">
+					<table class="ask-title-table">
+						<tbody><tr>
+							<td class="ask-title-cell-key">
+								<label for="title">Title</label>
+							</td>
+							<td class="ask-title-cell-value">
+								<input type="text" maxlength="300" tabindex="100" class="actual-edit-overlay" data-min-length="15" data-max-length="150" autocomplete="off" style="opacity: 1; position: absolute; color: black; -webkit-text-fill-color: black; width: 610px; height: 15px; line-height: normal; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: start; border: 1px solid rgb(153, 153, 153); background-color: white;" disabled="disabled"><input id="title" name="title" type="text" maxlength="300" tabindex="100" class="ask-title-field edit-field-overlayed" data-min-length="15" data-max-length="150" autocomplete="off" style="opacity: 0.4; z-index: 1; position: relative;">                        
+								<span class="edit-field-overlay">What's your programming question? Be specific.</span>
+							</td>
+						</tr>
+					</tbody></table>
+					<div id="question-suggestions">
+					</div>
+				</div>
+			</div>
+
+			<script>
+				StackExchange.ifUsing("editor", function () {
+					StackExchange.using("externalEditor", function () {
+						StackExchange.using("snippets", function () {
+							StackExchange.snippets.init();
+						});
+					});
+				}, "code-snippets");
+			</script>
+
+
+			<script>
+				StackExchange.ready(function() {
+					StackExchange.using("tagEditor", function () { StackExchange.tagEditor.ready.done(initFadingHelpText); });
+					initTagRenderer("".split(" "), "".split(" "));
+
+					StackExchange.using("externalEditor", function() {
+            // Have to fire editor after snippets, if snippets enabled
+            if (StackExchange.options.snippets.enabled) {
+            	StackExchange.using("snippets", function() {
+            		createEditor();
+            	});
+            }
+            else {
+            	createEditor();
+            }
+        });
+
+					function createEditor() {
+						prepareEditor({
+							heartbeatType: 'ask',
+							bindNavPrevention: true,
+							postfix: "",
+							onDemand: false,
+							discardSelector: ".discard-question"
+
+						});
+
+
+					}
+				});  
+			</script>
+
+
+			<div id="post-editor" class="post-editor">
+
+				<div style="position: relative;">     
+					<div class="wmd-container">
+						<div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li class="wmd-button" id="wmd-bold-button" title="Strong <strong> Ctrl+B" style="left: 0px;"><span style="background-position: 0px 0px;"></span></li><li class="wmd-button" id="wmd-italic-button" title="Emphasis <em> Ctrl+I" style="left: 25px;"><span style="background-position: -20px 0px;"></span></li><li class="wmd-spacer wmd-spacer1" id="wmd-spacer1"></li><li class="wmd-button" id="wmd-link-button" title="Hyperlink <a> Ctrl+L" style="left: 75px;"><span style="background-position: -40px 0px;"></span></li><li class="wmd-button" id="wmd-quote-button" title="Blockquote <blockquote> Ctrl+Q" style="left: 100px;"><span style="background-position: -60px 0px;"></span></li><li class="wmd-button" id="wmd-code-button" title="Code Sample <pre><code> Ctrl+K" style="left: 125px;"><span style="background-position: -80px 0px;"></span></li><li class="wmd-button" id="wmd-image-button" title="Image <img> Ctrl+G" style="left: 150px;"><span style="background-position: -100px 0px;"></span></li><li class="wmd-button wmd-snippet-button" style="left:175px" id="wmd-snippet-button" title="Code snippet Ctrl-M"><span style="background-image: url(http://stackoverflow.com/content/balsamiq/wmd-mockup-button.png?v=5);"></span></li><li class="wmd-spacer wmd-spacer2" id="wmd-spacer2" style="left: 200px;"></li><li class="wmd-button" id="wmd-olist-button" title="Numbered List <ol> Ctrl+O" style="left: 225px;"><span style="background-position: -120px 0px;"></span></li><li class="wmd-button" id="wmd-ulist-button" title="Bulleted List <ul> Ctrl+U" style="left: 250px;"><span style="background-position: -140px 0px;"></span></li><li class="wmd-button" id="wmd-heading-button" title="Heading <h1>/<h2> Ctrl+H" style="left: 275px;"><span style="background-position: -160px 0px;"></span></li><li class="wmd-button" id="wmd-hr-button" title="Horizontal Rule <hr> Ctrl+R" style="left: 300px;"><span style="background-position: -180px 0px;"></span></li><li class="wmd-spacer wmd-spacer3" id="wmd-spacer3" style="left: 325px;"></li><li class="wmd-button" id="wmd-undo-button" title="Undo - Ctrl+Z" style="left: 350px;"><span style="background-position: -200px -20px;"></span></li><li class="wmd-button" id="wmd-redo-button" title="Redo - Ctrl+Shift+Z" style="left: 375px;"><span style="background-position: -220px -20px;"></span></li><li class="wmd-button wmd-help-button" id="wmd-help-button" title="Markdown Editing Help" style="right: 0px;"><span style="background-position: -240px 0px;"></span></li></ul></div>
+						<textarea id="wmd-input" class="wmd-input processed" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+						<div class="grippie" style="margin-right: -8px;"></div></div>
+					</div>
+
+					<div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+					<div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+					<div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+					<div id="wmd-preview" class="wmd-preview"></div>
+					<div></div>
+					<div class="edit-block">
+						<input id="fkey" name="fkey" type="hidden" value="068fe6631013432cda622cac7cff7381">
+						<input id="author" name="author" type="text">
+					</div>
+				</div>
+
+				<div style="position: relative;"> 
+
+					<script>
+						StackExchange.using("tagEditor", function () {
+							initTagRenderer("".split(" "), "".split(" "));
+							StackExchange.tagEditor($("#tagnames"));
+						});
+					</script>	
+
+					<div style="position: relative;"> 
+						<div class="form-item">
+							<label>Tags</label>
+							<input id="tagnames" name="tagnames" type="text" size="60" value="" tabindex="103" style="display: none;"><div class="actual-edit-overlay" style="width: 666px; height: 27px; opacity: 1; position: absolute; color: black; -webkit-text-fill-color: black; line-height: 27px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: start; border: 1px solid rgb(153, 153, 153); background-color: white;" disabled="disabled">&nbsp;at least one tag such as (html5 android forms), max 5 tags</div><div class="tag-editor edit-field-overlayed" style="width: 666px; height: 27px; opacity: 0.4; z-index: 1; position: relative;"><span></span><input type="text" tabindex="103" style="width: 658px;"><span></span></div>
+							<span class="edit-field-overlay">
+								at least one tag such as (html5 android forms), max 5 tags    </span>
+							</div>
+						</div>
+
+						<div id="tag-suggestions"></div>
+						<script>
+							StackExchange.using("tagSuggestions", function () {
+								StackExchange.tagSuggestions.init();
+							});
+						</script>
+
+
+					</div>
+
+					<div id="question-only-section">
+
+						<div class="form-submit cbt">
+							<input id="submit-button" type="submit" value="Post Your Question" tabindex="120">
+							<a href="#" class="discard-question dno">discard</a>
+
+						</div>
+					</div>
+				</div>
+
+				<div id="answer-from-ask-form-item" class="form-item">
+					<input type="checkbox" id="answer-from-ask" name="answer-from-ask"> <label for="answer-from-ask" style="display: inline;">Answer your own question</label> – <a href="http://blog.stackoverflow.com/2011/07/its-ok-to-ask-and-answer-your-own-questions/" target="_blank">share your knowledge, Q&amp;A-style</a>
+				</div>
+				<div id="question-answer-section" class="dno">
+					<div id="inline-answer" style="margin-bottom: 20px;">
+
+
+
+						<script>
+							StackExchange.ifUsing("editor", function () {
+								StackExchange.using("externalEditor", function () {
+									StackExchange.using("snippets", function () {
+										StackExchange.snippets.init();
+									});
+								});
+							}, "code-snippets");
+						</script>
+
+
+						<script>
+							StackExchange.ready(function() {
+								StackExchange.using("tagEditor", function () { StackExchange.tagEditor.ready.done(initFadingHelpText); });
+								initTagRenderer("".split(" "), "".split(" "));
+
+								StackExchange.using("externalEditor", function() {
+            // Have to fire editor after snippets, if snippets enabled
+            if (StackExchange.options.snippets.enabled) {
+            	StackExchange.using("snippets", function() {
+            		createEditor();
+            	});
+            }
+            else {
+            	createEditor();
+            }
+        });
+
+								function createEditor() {
+									prepareEditor({
+										heartbeatType: '',
+										bindNavPrevention: true,
+										postfix: "-42",
+										onDemand: false,
+										discardSelector: ".discard-question"
+										,postId:42
+									});
+
+
+								}
+							});  
+						</script>
+
+
+						<div id="post-editor-42" class="post-editor">
+
+							<div style="position: relative;">     
+								<div class="wmd-container">
+									<div id="wmd-button-bar-42" class="wmd-button-bar"></div>
+									<textarea id="wmd-input-42" class="wmd-input" name="post-text-answer" cols="92" rows="15" tabindex="103" data-min-length=""></textarea>
+								</div>
+							</div>
+
+							<div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+							<div id="draft-saved-42" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+							<div id="draft-discarded-42" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+							<div class="community-option">
+								<input id="communitymode-42" name="communitymode" type="checkbox">
+								<label for="communitymode-42" title="Marking an answer community wiki encourages others to edit it by lowering the reputation barrier required to edit. However, you will not gain any upvote reputation from it. This cannot be undone.">community wiki</label>
+							</div>
+
+
+							<div id="wmd-preview-42" class="wmd-preview"></div>
+							<div></div>
+						</div>
+					</div>
+
+
+					<div class="form-submit cbt">
+						<input id="submit-button-42" type="submit" value="Post Your Question And Answer" tabindex="120">
+						<a href="#" class="discard-question dno">discard</a>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div id="sidebar" class="ask-sidebar">
+			<div id="scroller-anchor"></div>
+			<div id="scroller" style="position: relative; width: 270px;">
+				<div class="module newuser sidebar-help" id="how-to-title">
+					<h4>How to Ask</h4>
+					<p><b>Is your question about programming?</b></p><p>We prefer questions that can be <i>answered</i>, not just discussed.</p><p>Provide details. Share your research.</p><p>If your question is about this website, <b><a href="http://meta.stackoverflow.com">ask it on meta</a></b> instead.</p><p class="ar"><a href="/help">visit the help center »</a><br><a href="/help/how-to-ask">asking help »</a></p>
+				</div>
+				<div class="module newuser sidebar-help" id="how-to-format" style="display: none;">
+					<h4>How to Format</h4>        
+					<p><span class="dingus">►</span> put returns between paragraphs</p>
+					<p><span class="dingus">►</span> for linebreak add 2 spaces at end</p>
+					<p><span class="dingus">►</span> <i>_italic_</i> or <b>**bold**</b></p>
+					<p><span class="dingus">►</span> indent code by 4 spaces</p>
+					<p><span class="dingus">►</span> backtick escapes <code>`like _so_`</code></p>
+					<p><span class="dingus">►</span> quote by placing &gt; at start of line</p>
+					<p><span class="dingus">►</span> to make links</p>
+					<p>&lt;http://foo.com&gt;<br>[foo](http://foo.com)<br>&lt;a href="http://foo.com"&gt;foo&lt;/a&gt;</p>
+					<p><span class="dingus">►</span> <a href="http://meta.stackexchange.com/questions/1777/what-html-tags-are-allowed" target="_blank">basic HTML</a> also allowed</p>
+					<p class="ar">
+						<a href="/editing-help" target="_edithelp">formatting help »</a><br>
+						<a href="/questions/how-to-ask">asking help »</a>
+					</p>
+				</div>
+				<div class="module newuser sidebar-help" id="how-to-tag" style="display: none;">
+					<h4>How to Tag</h4>
+					<p>A tag is a keyword or label that categorizes your question with other, similar questions.</p>    
+					<p><span class="dingus">►</span> favor existing popular tags; avoid creating new tags</p>
+					<p><span class="dingus">►</span> use common abbreviations</p>
+					<p><span class="dingus">►</span> don't include synonyms</p>
+					<p><span class="dingus">►</span> combine multiple words into single-words with dashes</p>
+					<p><span class="dingus">►</span> maximum of 5 tags, 25 chars per tag</p>
+					<p><span class="dingus">►</span> tag characters: [a-z 0-9 + # - .]</p>
+					<p><span class="dingus">►</span> delimit tags by space, semicolon, or comma</p>
+					<p class="ar"><a href="/tags">popular tags »</a></p>
+				</div>    
+			</div>
+			<script>
+				StackExchange.ready(function () { moveScroller(); });
+				StackExchange.using("editor", function () {
+
+					var lengthCheckInterval = setInterval(function () {
+						if ($("#wmd-input").val().length >= 220) {
+							clearInterval(lengthCheckInterval);
+							StackExchange.cardiologist.beatASAP();
+						}
+					}, 3000);
+				});
+
+
+			</script>
+
+		</div>
+		{% endblock %}

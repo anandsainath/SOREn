@@ -3,10 +3,9 @@
 {% block header_script %}
 <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/nvd3/nv.d3.css') }}">
 
-<script type="text/javascript" src="{{ url_for('static', filename='bower_components/d3/d3.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='bower_components/nvd3/nv.d3.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/server_graph.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='bower_components/d3/d3.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='bower_components/d3/d3.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='bower_components/queue-async/queue.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='bower_components/nvd3/nv.d3.js') }}"></script>
 
 <style type="text/css">
 	#chart1, #chart2 {
@@ -16,14 +15,6 @@
 
 <script type="text/javascript">
 	$(function(){
-		$.ajax({
-			url:"/trends/get-data",
-			dataType: "json",
-			success: function(data){
-				drawViz(data, "#comparison-one");
-			}
-		});
-
 		$.ajax({
 			url: "/trends/get-data2",
 			dataType: "json",
@@ -51,76 +42,76 @@
 		var width = 960;
 
 		var main_visualization = svg.append("g").attr("class","main_visualization")
-			.attr("transform", function(datum,index){
-				var xTranslate = width/2 - ((xPadding + (itemHeight * data.row.length)/2));
-				return "translate("+xTranslate+",0)";
-			});
+		.attr("transform", function(datum,index){
+			var xTranslate = width/2 - ((xPadding + (itemHeight * data.row.length)/2));
+			return "translate("+xTranslate+",0)";
+		});
 
 		var row_labels = main_visualization.append("g").attr("class","row_labels").attr("transform","translate(0,"+yPadding+")");
 		var col_labels = main_visualization.append("g").attr("class","col_labels").attr("transform", "translate("+xPadding+",0)");
 		var matrix = main_visualization.append("g").attr("class","matrix").attr("transform", "translate("+xPadding+","+yPadding+")");
 
 		row_labels.selectAll(".row_labels").data(data.row).enter()
-			.append("text")
-			.attr("class","row_labels")
-			.text(function(datum){
-				return datum;
-			})
-			.attr("text-anchor", "end")
-			.attr("x", xPadding-20)
-			.attr("y", function(datum, index){
-				return index*itemHeight + 25;
-			})
-			.attr("style", "fill: #000000;");
+		.append("text")
+		.attr("class","row_labels")
+		.text(function(datum){
+			return datum;
+		})
+		.attr("text-anchor", "end")
+		.attr("x", xPadding-20)
+		.attr("y", function(datum, index){
+			return index*itemHeight + 25;
+		})
+		.attr("style", "fill: #000000;");
 
 		col_labels.selectAll(".col_labels").data(data.col).enter()
-			.append("g")
-			.attr("class", "col_labels")
-			.attr("transform", function(datum, index){
-				return "translate("+(index* itemHeight + (itemHeight/2))+","+(yPadding-10)+")";
+		.append("g")
+		.attr("class", "col_labels")
+		.attr("transform", function(datum, index){
+			return "translate("+(index* itemHeight + (itemHeight/2))+","+(yPadding-10)+")";
+		})
+		.each(function(datum, col_index){
+			var g = d3.select(this);
+			g.append("text")
+			.text(function(datum){
+				return datum
 			})
-			.each(function(datum, col_index){
-				var g = d3.select(this);
-				g.append("text")
-				.text(function(datum){
-					return datum
-				})
-				.attr("text-anchor","start")
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("transform",function(datum){
-					return "rotate(-50)";
-				})
-				.attr("style", "fill: #000000;");
-			});
+			.attr("text-anchor","start")
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("transform",function(datum){
+				return "rotate(-50)";
+			})
+			.attr("style", "fill: #000000;");
+		});
 
 		matrix.selectAll(".rows")
-			.data(data.values).enter()
-			.append("g")
-			.attr("class", "rows")
-			.attr("transform", function(datum, index){
-				return "translate(0,"+(index*itemHeight)+")";
+		.data(data.values).enter()
+		.append("g")
+		.attr("class", "rows")
+		.attr("transform", function(datum, index){
+			return "translate(0,"+(index*itemHeight)+")";
+		})
+		.each(function(datum, row_index){
+
+			var row = d3.select(this);
+
+			row.selectAll(".items").data(datum).enter()
+			.append("rect")
+			.attr("class", "items")
+			.attr("width", itemHeight)
+			.attr("height", itemHeight)
+			.attr("x", function(datum, index){
+				return index*itemHeight;
 			})
-			.each(function(datum, row_index){
-
-				var row = d3.select(this);
-
-				row.selectAll(".items").data(datum).enter()
-				.append("rect")
-				.attr("class", "items")
-				.attr("width", itemHeight)
-				.attr("height", itemHeight)
-				.attr("x", function(datum, index){
-					return index*itemHeight;
-				})
-				.attr("y", 0)
-				.attr("rx", 5)
-				.attr("ry", 5)
-				.attr("stroke-width","2px")
-				.attr("style", function(datum){
-					return "fill: "+heatMapColors(heatMapRange(datum))+"; stroke: #FFFFFF"
-				});
+			.attr("y", 0)
+			.attr("rx", 5)
+			.attr("ry", 5)
+			.attr("stroke-width","2px")
+			.attr("style", function(datum){
+				return "fill: "+heatMapColors(heatMapRange(datum))+"; stroke: #FFFFFF"
 			});
+		});
 	}
 </script>
 {% endblock %}
@@ -141,19 +132,20 @@
 	</p>
 </div>
 
-<h2 class="space">Server Side Scripting Technologies</h2>
+<select class="form-control" id="technology-group">
+  <option value="back_end_list">Back End Technologies</option>
+  <option value="browser_list">Browsers</option>
+  <option value="cms_list">CMS</option>
+  <option value="data_format_list">Data Formats</option>
+  <option value="front_end_list">Front End Technologies</option>
+  <option value="ide_list">IDE</option>
+  <option value="mobile_list">Mobile Technologies</option>
+  <option value="open_api_list">Open API</option>
+  <option value="os_list">OS</option>
+  <option value="server_side_scripting_list">Server Side Scripting Technologies</option>
+</select>
 <div>
 	<svg id="chart1"></svg>
-</div>
-
-<h2 class="space">Database Technologies</h2>
-<div>
-	<svg id="chart2"></svg>
-</div>
-
-<h2 class="space">Front End Technologies vs Database Technologies</h2>
-<div>
-	<svg id="comparison-one" width="960" height="500"></svg>
 </div>
 
 <h2 class="space">Server Side Technologies vs Database Technologies</h2>
@@ -164,100 +156,113 @@
 
 {% block content_script %}
 <script>
-	var colors = d3.scale.category20();
-	keyColor = function(d, i) {return colors(d.key)};
 
-	var chart, chart2;
-	nv.addGraph(function() {
-		chart = nv.models.stackedAreaChart()
-               //.width(600).height(500)
-               .useInteractiveGuideline(true)
-               .x(function(d) { return d[0] })
-               .y(function(d) { return d[1] })
-               .color(keyColor)
-               .transitionDuration(300);
-                //.clipEdge(true);
+	$(function(){
+		$('#technology-group').change(function(){
+			var current_data = undefined;
+			switch($(this).val()){
+				case "back_end_list":
+					current_data = back_end_list;
+				break;
+				case "browser_list":
+					current_data = browser_list;
+				break;
+				case "cms_list":
+					current_data = cms_list;
+				break;
+				case "data_format_list":
+					current_data = data_format_list;
+				break;
+				case "front_end_list":
+					current_data = front_end_list;
+				break;
+				case "ide_list":
+					current_data = ide_list;
+				break;
+				case "mobile_list":
+					current_data = mobile_list;
+				break;
+				case "open_api_list":
+					current_data = open_api_list;
+				break;
+				case "os_list":
+					current_data = os_list;
+				break;
+				case "server_side_scripting_list":
+					current_data = server_side_scripting_list;
+				break;	
+			}
 
-		// chart.stacked.scatter.clipVoronoi(false);
+			if(current_data){
+				$('#chart1').empty();
+				drawChart(current_data);
+			}
+		});
+	});
 
-		chart.xAxis
-		.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+	var back_end_list, browser_list, cms_list, data_format_list, front_end_list, ide_list, mobile_list, open_api_list, os_list, server_side_scriptin_list
+	queue()
+		.defer(d3.json, "/static/data/trends/back_end_list.json")
+		.defer(d3.json, "/static/data/trends/browser_list.json")
+		.defer(d3.json, "/static/data/trends/cms_list.json")
+		.defer(d3.json, "/static/data/trends/data_format_list.json")
+		.defer(d3.json, "/static/data/trends/front_end_list.json")
+		.defer(d3.json, "/static/data/trends/ide_list.json")
+		.defer(d3.json, "/static/data/trends/mobile_list.json")
+		.defer(d3.json, "/static/data/trends/open_api_list.json")
+		.defer(d3.json, "/static/data/trends/os_list.json")
+		.defer(d3.json, "/static/data/trends/server_side_scripting_list.json")
+		.await(dataLoaded);
 
-		chart.yAxis
-		.tickFormat(d3.format(',.2f'));
+	function dataLoaded(error, _back_end_list, _browser_list, _cms_list, _data_format_list, _front_end_list, _ide_list, _mobile_list, _open_api_list, _os_list, _server_side_scriptin_list){
+		back_end_list = _back_end_list;
+		browser_list = _browser_list;
+		cms_list = cms_list;
+		data_format_list = _data_format_list;
+		front_end_list = _front_end_list;
+		ide_list = _ide_list;
+		mobile_list = _mobile_list;
+		open_api_list = _open_api_list;
+		os_list = _os_list;
+		server_side_scripting_list = _server_side_scriptin_list;
 
-		d3.select('#chart1')
-		.datum(server_graph_json)
-		.transition().duration(1000)
-		.call(chart)
-		    // .transition().duration(0)
-		    .each('start', function() {
-		    	setTimeout(function() {
-		    		d3.selectAll('#chart1 *').each(function() {
-		    			console.log('start',this.__transition__, this)
-		              // while(this.__transition__)
-		              if(this.__transition__)
-		              	this.__transition__.duration = 1;
-		          })
-		    	}, 0)
-		    });
-		    // .each('end', function() {
-		    //         d3.selectAll('#chart1 *').each(function() {
-		    //           console.log('end', this.__transition__, this)
-		    //           // while(this.__transition__)
-		    //           if(this.__transition__)
-		    //             this.__transition__.duration = 1;
-		    //         })});
+		drawChart(back_end_list);
+	}
 
-nv.utils.windowResize(chart.update);
-	  		// chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
-	  		return chart;
-	  	});
+	function drawChart(data){
+		var colors = d3.scale.category20();
+		keyColor = function(d, i) {return colors(d.key)};
 
-nv.addGraph(function() {
-	chart2 = nv.models.stackedAreaChart()
-               //.width(600).height(500)
-               .useInteractiveGuideline(true)
-               .x(function(d) { return d[0] })
-               .y(function(d) { return d[1] })
-               .color(keyColor)
-               .transitionDuration(300);
-                //.clipEdge(true);
+		var chart;
+		nv.addGraph(function() {
+			chart = nv.models.stackedAreaChart()
+	               .useInteractiveGuideline(true)
+	               .x(function(d) { return (d == undefined)? 0 : d[0]; })
+	               .y(function(d) { return (d == undefined)? 0 : d[1]; })
+	               .color(keyColor)
+	               .transitionDuration(300)
+	               .clipEdge(true);
 
-		// chart.stacked.scatter.clipVoronoi(false);
+			chart.xAxis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+			chart.yAxis.tickFormat(d3.format(',.2f'));
 
-		chart2.xAxis
-		.tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+			d3.select('#chart1')
+				.datum(data)
+				.transition().duration(300)
+				.call(chart)
+				    .each('start', function() {
+				    	setTimeout(function() {
+				    		d3.selectAll('#chart1 *').each(function() {
+				              if(this.__transition__)
+				              	this.__transition__.duration = 1;
+				          })
+				    	}, 0)
+				    });
+			    
+			nv.utils.windowResize(chart.update);
+		  		return chart;
+		  	});
+	}
 
-		chart2.yAxis
-		.tickFormat(d3.format(',.2f'));
-
-		d3.select('#chart2')
-		.datum(server_graph_json)
-		.transition().duration(1000)
-		.call(chart2)
-		    // .transition().duration(0)
-		    .each('start', function() {
-		    	setTimeout(function() {
-		    		d3.selectAll('#chart2 *').each(function() {
-		    			console.log('start',this.__transition__, this)
-		              // while(this.__transition__)
-		              if(this.__transition__)
-		              	this.__transition__.duration = 1;
-		          })
-		    	}, 0)
-		    });
-		    // .each('end', function() {
-		    //         d3.selectAll('#chart1 *').each(function() {
-		    //           console.log('end', this.__transition__, this)
-		    //           // while(this.__transition__)
-		    //           if(this.__transition__)
-		    //             this.__transition__.duration = 1;
-		    //         })});
-
-nv.utils.windowResize(chart2.update);
-	  		// chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
-	  		return chart2;
-	  	});
 </script>
 {% endblock %}

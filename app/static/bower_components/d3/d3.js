@@ -6079,7 +6079,9 @@ d3 = function() {
       for (j = 0; j < m; ++j) {
         out.call(stack, series[0][j], o = offsets[j], points[0][j][1]);
         for (i = 1; i < n; ++i) {
-          out.call(stack, series[i][j], o += points[i - 1][j][1], points[i][j][1]);
+          var a = (points[i-1][j] === undefined) ? 0 : points[i-1][j][1];
+          var b = (points[i][j] === undefined)? 0 : points[i][j][1];
+          out.call(stack, series[i][j], o += a, b);
         }
       }
       return data;

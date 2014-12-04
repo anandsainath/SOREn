@@ -14,14 +14,116 @@
 </style>
 
 <script type="text/javascript">
+	// $(function(){
+		// $.ajax({
+		// 	url: "/trends/get-data2",
+		// 	dataType: "json",
+		// 	success: function(data){
+		// 		drawViz(data, "#comparison-two");
+		// 	}
+		// })
+	// });
+	
+	var cback_end_list, cbrowser_list, ccms_list, cdata_format_list, cfront_end_list, cide_list, cmobile_list, copen_api_list, cos_list, cserver_side_scriptin_list
+
+	queue()
+		.defer(d3.json, "/static/data/combinations/back_end_list.json")
+		.defer(d3.json, "/static/data/combinations/browser_list.json")
+		.defer(d3.json, "/static/data/combinations/cms_list.json")
+		.defer(d3.json, "/static/data/combinations/data_format_list.json")
+		.defer(d3.json, "/static/data/combinations/front_end_list.json")
+		.defer(d3.json, "/static/data/combinations/ide_list.json")
+		.defer(d3.json, "/static/data/combinations/mobile_list.json")
+		.defer(d3.json, "/static/data/combinations/open_api_list.json")
+		.defer(d3.json, "/static/data/combinations/os_list.json")
+		.defer(d3.json, "/static/data/combinations/server_side_scripting_list.json")
+		.await(combinationDataLoaded);
+
+	function combinationDataLoaded(error, _back_end_list, _browser_list, _cms_list, _data_format_list, _front_end_list, _ide_list, _mobile_list, _open_api_list, _os_list, _server_side_scriptin_list){
+		cback_end_list = _back_end_list;
+		cbrowser_list = _browser_list;
+		ccms_list = _cms_list;
+		cdata_format_list = _data_format_list;
+		cfront_end_list = _front_end_list;
+		cide_list = _ide_list;
+		cmobile_list = _mobile_list;
+		copen_api_list = _open_api_list;
+		cos_list = _os_list;
+		cserver_side_scripting_list = _server_side_scriptin_list;
+
+		drawCombinationGraph();
+	}
+
+	function drawCombinationGraph(){
+		var row = $("#technology-group-1").val();
+		var col = $("#technology-group-2").val();
+
+		current_data = undefined;
+		switch(row){
+			case "back_end_list":
+				current_data = cback_end_list;
+			break;
+			case "browser_list":
+				current_data = cbrowser_list;
+			break;
+			case "cms_list":
+				current_data = ccms_list;
+			break;
+			case "data_format_list":
+				current_data = cdata_format_list;
+			break;
+			case "front_end_list":
+				current_data = cfront_end_list;
+			break;
+			case "ide_list":
+				current_data = cide_list;
+			break;
+			case "mobile_list":
+				current_data = cmobile_list;
+			break;
+			case "open_api_list":
+				current_data = copen_api_list;
+			break;
+			case "os_list":
+				current_data = cos_list;
+			break;
+			case "server_side_scripting_list":
+				current_data = cserver_side_scripting_list;
+			break;	
+		}
+
+
+		// console.log(current_data, current_data["cols"][col], current_data["rows"]);
+		values = [];
+		max_value = 0;
+		$.each(current_data["values"], function(index, datum){
+			// console.log(datum, index);
+			values.push(datum[col]);
+			current_max = Math.max.apply(Math, datum[col]);
+			max_value = Math.max(max_value, current_max);
+		});
+
+		console.log(max_value);
+
+		drawViz({
+			"row": current_data["rows"],
+			"col": current_data["cols"][col],
+			"values": values,
+			"max": max_value
+		}, "#comparison-two");
+	}
+	
+
 	$(function(){
-		$.ajax({
-			url: "/trends/get-data2",
-			dataType: "json",
-			success: function(data){
-				drawViz(data, "#comparison-two");
+		$('#technology-group-1, #technology-group-2').change(function(){
+			var row = $('#technology-group-1').val();
+			var col = $('#technology-group-2').val();
+
+			if(row != col){
+				$('#comparison-two').empty();
+				drawCombinationGraph();
 			}
-		})
+		});
 	});
 
 	//green swatch..
@@ -29,12 +131,14 @@
 	var seedHeatMapColors = ["#f7fbff", '#deebf7','#c6dbef','#9ecae1','#6baed6','#4292c6','#2171b5','#084594'];
 
 	var heatMapColors = d3.scale.linear()
-	.domain(d3.range(0, 1, 1.0 / (seedHeatMapColors.length - 1)))
-	.range(seedHeatMapColors);
+		.domain(d3.range(0, 1, 1.0 / (seedHeatMapColors.length - 1)))
+		.range(seedHeatMapColors);
 
-	var heatMapRange = d3.scale.linear().domain([1, 15]).range([0,1]);
+	var heatMapRange;
 
 	function drawViz(data, selector){
+		heatMapRange = d3.scale.linear().domain([0, data.max]).range([0,1]);
+
 		var svg = d3.select(selector);
 		var itemHeight = 36;
 		var yPadding = 100;
@@ -148,7 +252,31 @@
 	<svg id="chart1"></svg>
 </div>
 
-<h2 class="space">Server Side Technologies vs Database Technologies</h2>
+<select class="form-control" id="technology-group-1">
+  <option value="back_end_list">Back End Technologies</option>
+  <option value="browser_list">Browsers</option>
+  <option value="cms_list">CMS</option>
+  <option value="data_format_list">Data Formats</option>
+  <option value="front_end_list">Front End Technologies</option>
+  <option value="ide_list">IDE</option>
+  <option value="mobile_list">Mobile Technologies</option>
+  <option value="open_api_list">Open API</option>
+  <option value="os_list">OS</option>
+  <option value="server_side_scripting_list">Server Side Scripting Technologies</option>
+</select>
+&nbsp;&nbsp;&nbsp;
+<select class="form-control" id="technology-group-2">
+  <option value="back_end_list">Back End Technologies</option>
+  <option value="browser_list">Browsers</option>
+  <option value="cms_list">CMS</option>
+  <option value="data_format_list" selected="selected">Data Formats</option>
+  <option value="front_end_list">Front End Technologies</option>
+  <option value="ide_list">IDE</option>
+  <option value="mobile_list">Mobile Technologies</option>
+  <option value="open_api_list">Open API</option>
+  <option value="os_list">OS</option>
+  <option value="server_side_scripting_list">Server Side Scripting Technologies</option>
+</select>
 <div>
 	<svg id="comparison-two" width="960" height="500"></svg>
 </div>
@@ -217,7 +345,7 @@
 	function dataLoaded(error, _back_end_list, _browser_list, _cms_list, _data_format_list, _front_end_list, _ide_list, _mobile_list, _open_api_list, _os_list, _server_side_scriptin_list){
 		back_end_list = _back_end_list;
 		browser_list = _browser_list;
-		cms_list = cms_list;
+		cms_list = _cms_list;
 		data_format_list = _data_format_list;
 		front_end_list = _front_end_list;
 		ide_list = _ide_list;

@@ -12,14 +12,17 @@ conn = pymysql.connect(host='127.0.0.1', port=8889, user='root', passwd='root', 
 
 @mod_expert_prediction.route('/')
 def index():
-	tags = ["java","android"]
-	weights = [0.5,0.5]
+	tags = ["java","javascript","php","jquery","acm"]
+	weights = [0.1,0.2,0.3,0.2, 0.2]
 
 	cur = conn.cursor()
 	user_list = {}
 	user_tag_list = {}
 	for k in range(len(tags)):
-		cur.execute("SELECT User_id, (51 - Rank) FROM top_expert_users where tag = \'"+tags[k]+"\'")	
+		cur.execute("SELECT max(Rank) FROM top_expert_users where tag = \'"+tags[k]+"\'")	
+		r = cur.fetchall()
+		max_val = int(r[0][0])+1
+		cur.execute("SELECT User_id, ("+str(max_val)+" - Rank) FROM top_expert_users where tag = \'"+tags[k]+"\'")	
 		r = cur.fetchall()
 		for record in r:
 			if(user_list.has_key(record[0])):
@@ -31,7 +34,7 @@ def index():
 	sorted_users = sorted(user_list.items(), key=operator.itemgetter(1))
 	user_count = min(20, len(sorted_users));
 
-	user_ids = ','.join(user_id[0] for user_id in sorted_users)
+	user_ids = ','.join(user_id[0] for user_id in sorted_users[0:user_count])
 
 	cur.execute("select *  from users where Id in ("+user_ids+")")
 	r = cur.fetchall()

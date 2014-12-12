@@ -63,11 +63,7 @@ def get_combination_data():
 		for technology in technology_list["values"]:
 
 			primary_item_dict = {}
-			# primary_item_list = []
-
 			for secondary_technology_list in overall_list:
-
-				# secondary_item_dict = {}
 				secondary_item_list = []
 
 				secondary_technology_category_name = secondary_technology_list["key"]
@@ -85,18 +81,12 @@ def get_combination_data():
 					count = cursor.fetchone()
 
 					if count[0] != None:
-						# secondary_item_dict[secondary_technology] = int(count[0])
 						secondary_item_list.append(int(count[0]))
 					else:
-						# secondary_item_dict[secondary_technology] = 0
 						secondary_item_list.append(0)
 
-				# primary_item_list.append(secondary_item_list)
 				primary_item_dict[secondary_technology_category_name] = secondary_item_list
-
-			# technology_item_dict[technology] = primary_item_dict
 			technology_item_dict["values"].append(primary_item_dict)
-			# technology_item_dict["values"].append(primary_item_list)
 
 		# print technology_category_name, technology_item_dict
 		with open(base_path+"combinations/"+technology_category_name+".json", 'w') as outfile:

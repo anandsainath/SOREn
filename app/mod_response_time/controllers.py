@@ -14,7 +14,8 @@ base_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/sta
 
 @mod_response_time.route('/')
 def index():
-	return render_template("mod_response_time/index.html")
+	# return render_template("mod_response_time/index.html")
+	return render_template("mod_response_time/temp.html")
 
 @mod_response_time.route('/ask')
 def ask():
@@ -41,9 +42,9 @@ def parseBody(x):
 def get_predictions():
 	result = {}
 	clf1 = joblib.load(base_path+'models/fastest/model.pkl')
-	body = request.body
-	tags_list = request.tags
-	features = parseBody(body)
+	body = request.form
+	tags_list = request.form['tags']
+	features = parseBody(request.form['body'])
         tags = tags_list.split(',')
 	popular_tags = ['javascript','java','php','android','jquery','html','python','ios','css','mysql','sql','objective-c','ruby-on-rails','angularjs','c','arrays','json','sql-server','ajax','ruby']
 
@@ -63,7 +64,7 @@ def get_predictions():
 	fastest_class = clf1.predict(features)
 	clf2 = joblib.load(base_path+'models/authoritative/model2.pkl')
 	auth_class = clf2.predict(features)
-	result['fastest'] = fastest_class[0]
-	result['authoritative'] = auth_class[0]
+	result['fastest'] = int(fastest_class[0])
+	result['authoritative'] = int(auth_class[0])
 	
 	return json.dumps(result)

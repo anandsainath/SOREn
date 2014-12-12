@@ -4,6 +4,14 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/so/stub.en.js') }}"></script>
 
 <script>
+	$(function(){
+		$('#submitBtn').click(function(){
+			console.log("Sumbit btn clicked");
+			console.log($('#title').val());
+			console.log($('#wmd-input').val());
+		});
+	});
+
 	StackExchange.ready(
 		function () {
 			StackExchange.using("postValidation", function () {
@@ -221,9 +229,8 @@
 					<div style="position: relative;"> 
 						<div class="form-item">
 							<label>Tags</label>
-							<input id="tagnames" name="tagnames" type="text" size="60" value="" tabindex="103" style="display: none;"><div class="actual-edit-overlay" style="width: 666px; height: 27px; opacity: 1; position: absolute; color: black; -webkit-text-fill-color: black; line-height: 27px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: start; border: 1px solid rgb(153, 153, 153); background-color: white;" disabled="disabled">&nbsp;at least one tag such as (html5 android forms), max 5 tags</div><div class="tag-editor edit-field-overlayed" style="width: 666px; height: 27px; opacity: 0.4; z-index: 1; position: relative;"><span></span><input type="text" tabindex="103" style="width: 658px;"><span></span></div>
-							<span class="edit-field-overlay">
-								at least one tag such as (html5 android forms), max 5 tags    </span>
+							<input id="tagnames" name="tagnames" type="text" size="60" value="" tabindex="103" style="display: none;"><div class="actual-edit-overlay" style="width: 666px; height: 27px; opacity: 1; position: absolute; color: black; -webkit-text-fill-color: black; line-height: 27px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: start; border: 1px solid rgb(153, 153, 153); background-color: white;" disabled="disabled"</div><div class="tag-editor edit-field-overlayed" style="width: 666px; height: 27px; opacity: 0.4; z-index: 1; position: relative;"><span></span><input type="text" tabindex="103" style="width: 658px;"><span></span></div>
+							<span class="edit-field-overlay"></span>
 							</div>
 						</div>
 
@@ -240,7 +247,7 @@
 					<div id="question-only-section">
 
 						<div class="form-submit cbt">
-							<input id="submit-button" type="submit" value="Post Your Question" tabindex="120">
+							<input id="submitBtn" type="button" value="Post Your Question" tabindex="120">
 							<a href="#" class="discard-question dno">discard</a>
 
 						</div>
@@ -326,63 +333,10 @@
 
 
 					<div class="form-submit cbt">
-						<input id="submit-button-42" type="submit" value="Post Your Question And Answer" tabindex="120">
+						<input id="submitBtn" type="button" value="Post Your Question And Answer" tabindex="120">
 						<a href="#" class="discard-question dno">discard</a>
 					</div>
 				</div>
 			</form>
-		</div>
-
-		<div id="sidebar" class="ask-sidebar">
-			<div id="scroller-anchor"></div>
-			<div id="scroller" style="position: relative; width: 270px;">
-				<div class="module newuser sidebar-help" id="how-to-title">
-					<h4>How to Ask</h4>
-					<p><b>Is your question about programming?</b></p><p>We prefer questions that can be <i>answered</i>, not just discussed.</p><p>Provide details. Share your research.</p><p>If your question is about this website, <b><a href="http://meta.stackoverflow.com">ask it on meta</a></b> instead.</p><p class="ar"><a href="/help">visit the help center »</a><br><a href="/help/how-to-ask">asking help »</a></p>
-				</div>
-				<div class="module newuser sidebar-help" id="how-to-format" style="display: none;">
-					<h4>How to Format</h4>        
-					<p><span class="dingus">►</span> put returns between paragraphs</p>
-					<p><span class="dingus">►</span> for linebreak add 2 spaces at end</p>
-					<p><span class="dingus">►</span> <i>_italic_</i> or <b>**bold**</b></p>
-					<p><span class="dingus">►</span> indent code by 4 spaces</p>
-					<p><span class="dingus">►</span> backtick escapes <code>`like _so_`</code></p>
-					<p><span class="dingus">►</span> quote by placing &gt; at start of line</p>
-					<p><span class="dingus">►</span> to make links</p>
-					<p>&lt;http://foo.com&gt;<br>[foo](http://foo.com)<br>&lt;a href="http://foo.com"&gt;foo&lt;/a&gt;</p>
-					<p><span class="dingus">►</span> <a href="http://meta.stackexchange.com/questions/1777/what-html-tags-are-allowed" target="_blank">basic HTML</a> also allowed</p>
-					<p class="ar">
-						<a href="/editing-help" target="_edithelp">formatting help »</a><br>
-						<a href="/questions/how-to-ask">asking help »</a>
-					</p>
-				</div>
-				<div class="module newuser sidebar-help" id="how-to-tag" style="display: none;">
-					<h4>How to Tag</h4>
-					<p>A tag is a keyword or label that categorizes your question with other, similar questions.</p>    
-					<p><span class="dingus">►</span> favor existing popular tags; avoid creating new tags</p>
-					<p><span class="dingus">►</span> use common abbreviations</p>
-					<p><span class="dingus">►</span> don't include synonyms</p>
-					<p><span class="dingus">►</span> combine multiple words into single-words with dashes</p>
-					<p><span class="dingus">►</span> maximum of 5 tags, 25 chars per tag</p>
-					<p><span class="dingus">►</span> tag characters: [a-z 0-9 + # - .]</p>
-					<p><span class="dingus">►</span> delimit tags by space, semicolon, or comma</p>
-					<p class="ar"><a href="/tags">popular tags »</a></p>
-				</div>    
-			</div>
-			<script>
-				StackExchange.ready(function () { moveScroller(); });
-				StackExchange.using("editor", function () {
-
-					var lengthCheckInterval = setInterval(function () {
-						if ($("#wmd-input").val().length >= 220) {
-							clearInterval(lengthCheckInterval);
-							StackExchange.cardiologist.beatASAP();
-						}
-					}, 3000);
-				});
-
-
-			</script>
-
 		</div>
 		{% endblock %}

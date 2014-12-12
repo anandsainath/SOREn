@@ -1,0 +1,260 @@
+{% extends "base2.html" %}
+
+{% block title %}Ask Question - Stack Overflow{% endblock %}
+
+{% block header_script %}
+<style>
+	body{
+		
+	}
+
+	.panel-body{
+		min-height: 150px;
+	}
+
+	/* Sticky footer styles
+	-------------------------------------------------- */
+	html {
+		position: relative;
+		min-height: 100%;
+	}
+	body {
+		margin: 25px;
+		/* Margin bottom by footer height */
+		margin-bottom: 60px;
+	}
+	.footer {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		/* Set the fixed height of the footer here */
+		height: 60px;
+		background-color: #f5f5f5;
+	}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+	padding: 60px 15px 0;
+}
+.container .text-muted {
+	margin: 20px 0;
+}
+
+.footer > .container {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+code {
+	font-size: 80%;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="row">
+			<div class="form-group">
+				<input type="email" class="form-control" id="title" placeholder="Enter a title here">
+			</div>
+		</div>
+		<div class="row">
+			<textarea class="form-control" id="body" rows="13" placeholder="Ask your question here."></textarea>
+		</div>
+		<br/>
+		<div class="row">
+			<input type="email" class="form-control" id="tags" placeholder="Enter tags here">
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4"><button type="button" id="postBtn" class="btn btn-primary">Post Question</button></div>
+			<div class="col-md-4"></div>
+			
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Response Time</h3>
+					</div>
+					<div class="panel-body">
+						<div role="tabpanel">
+
+							<!-- Nav tabs -->
+							<ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a href="#authoritative-predict" aria-controls="home" role="tab" data-toggle="tab">Authoritative Users</a></li>
+								<li role="presentation"><a href="#immediate-predict" aria-controls="profile" role="tab" data-toggle="tab">Immediate Responders</a></li>
+							</ul>
+
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active" id="authoritative-predict">
+									<br/>
+									<div class="row">
+										<div class="col-md-4"></div>
+										<div class="col-md-4">
+											<h1 id="response-time-authoritative"></h1>
+										</div>
+										<div class="col-md-4"></div>
+									</div>
+									<div class="row">
+										<span></span>
+									</div>
+								</div>
+								<div role="tabpanel" class="tab-pane" id="immediate-predict">
+									<br/>
+									<div class="row">
+										<div class="col-md-4"></div>
+										<div class="col-md-4">
+											<h1 id="response-time-fastest"></h1>
+										</div>
+										<div class="col-md-4"></div>
+									</div>
+									<div class="row">
+										<span></span>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1"></div>
+			
+		</div>
+
+		<div class="row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Experts</h3>
+					</div>
+					<div class="panel-body">
+						
+						<div role="tabpanel">
+
+							<!-- Nav tabs -->
+							<ul class="nav nav-tabs" role="tablist">
+								<li role="presentation" class="active"><a href="#authoritative" aria-controls="home" role="tab" data-toggle="tab">Authoritative Users</a></li>
+								<li role="presentation"><a href="#immediate" aria-controls="profile" role="tab" data-toggle="tab">Immediate Responders</a></li>
+							</ul>
+
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div role="tabpanel" class="tab-pane active" id="authoritative">
+									<br/>
+									<ul class="list-group" id="list-authoritative">
+										<!-- <li class="list-group-item">Cras justo odio</li>
+										<li class="list-group-item">Dapibus ac facilisis in</li>
+										<li class="list-group-item">Morbi leo risus</li>
+										<li class="list-group-item">Porta ac consectetur ac</li>
+										<li class="list-group-item">Vestibulum at eros</li> -->
+									</ul>
+								</div>
+								<div role="tabpanel" class="tab-pane" id="immediate">
+									<br/>
+									<ul class="list-group" id="list-fastest">
+										<!-- li class="list-group-item">Cras asdasdads odio</li>
+										<li class="list-group-item">Dapibus ac facilisis in</li>
+										<li class="list-group-item">Morbi leo risus</li>
+										<li class="list-group-item">Porta ac consectetur ac</li>
+										<li class="list-group-item">Vestibulum at eros</li> -->
+									</ul>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1"></div>
+			
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block content_script %}
+<script>
+	$(function(){
+		$('#postBtn').click(function(){
+			$.ajax({
+				url:"/questions/get-predictions",
+				type: "post",
+				data:{"body":$('#body').val(),"tags":$('#tags').val()},
+				dataType: "json",
+				success: function(data){
+					var message;
+					switch(data.authoritative){
+						case 0:
+							message = "&lt; 1 Hour";
+						break;
+						case 1:
+							message = "&gt; 1 Hour & &lt; 1 day"
+						break;
+						case 2:
+							message = "&gt; 1 day"
+						break;
+					}
+					$('#response-time-authoritative').empty().html(message);
+
+					switch(data.fastest){
+						case 0:
+							message = "&lt; 1 Hour";
+						break;
+						case 1:
+							message = "&gt; 1 Hour & &lt; 1 day"
+						break;
+						case 2:
+							message = "&gt; 1 day"
+						break;
+					}
+					$('#response-time-fastest').empty().html(message);
+				}
+			});
+
+			$.ajax({
+				url:"/expert-prediction/predict",
+				type: "post",
+				data:{"body":$('#body').val(),"tags":$('#tags').val(),"title":$('#title').val()},
+				dataType: "json",
+				success: function(data){
+					console.log(data);
+
+					var tpl = "<li class='list-group-item'>Name: <<name>>, Tags: <<tags>>, Reputation: <<reputation>></li>";
+					$('#list-fastest').empty();
+					$.each(data.fastest, function(index, datum){
+						var li = tpl.replace("<<name>>", datum.Name);
+						li = li.replace("<<tags>>",datum.tags);
+						li = li.replace("<<reputation>>",datum.reputation);
+						$('#list-fastest').append(li);
+					});
+
+					$('#list-authoritative').empty();
+					$.each(data.authoritative, function(index, datum){
+						var li = tpl.replace("<<name>>", datum.Name);
+						li = li.replace("<<tags>>",datum.tags);
+						li = li.replace("<<reputation>>",datum.reputation);
+						$('#list-authoritative').append(li);
+					});
+				}
+			})
+		});
+	});
+</script>
+{% endblock %}

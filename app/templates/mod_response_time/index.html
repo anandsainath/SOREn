@@ -39,205 +39,192 @@
 						<td class="postcell">
 							<div>
 								<div class="post-text" itemprop="text">
+									<p id="content"></p>
+								</div>
+								<div class="post-taglist">
+									<a href="/questions/tagged/java" class="post-tag js-gps-track" title="" rel="tag">java</a> <a href="/questions/tagged/jquery" class="post-tag js-gps-track" title="show questions tagged 'jquery'" rel="tag">jquery</a> <a href="/questions/tagged/ajax" class="post-tag js-gps-track" title="show questions tagged 'ajax'" rel="tag">ajax</a> <a href="/questions/tagged/servlets" class="post-tag js-gps-track" title="show questions tagged 'servlets'" rel="tag">servlets</a> <a href="/questions/tagged/get" class="post-tag js-gps-track" title="show questions tagged 'get'" rel="tag">get</a> 
+								</div>
+								<table class="fw">
+									<tbody><tr>
+										<td class="vt">
+											<div class="post-menu"><a href="/q/26969773/614285" title="short permalink to this question" class="short-link" id="link-post-26969773">share</a><span class="lsep">|</span><a href="/posts/26969773/edit" class="suggest-edit-post" title="revise and improve this post">edit</a><span class="lsep">|</span><a href="#" class="flag-post-link" title="flag this post for serious problems or moderator attention" data-postid="26969773">flag</a></div>        
+										</td>
+										<td align="right" class="post-signature">
+											<div class="user-info ">
+												<div class="user-action-time">
+													<a href="/posts/26969773/revisions" title="show all edits to this post">edited <span title="2014-11-20 09:57:12Z" class="relativetime">Nov 20 at 9:57</span></a>
+												</div>
+												<div class="user-gravatar32">
 
-									<p>for example :</p>
+												</div>
+												<div class="user-details">
+													<br>
 
-									<p>i have a js like : </p>
-
-									<pre class="lang-java prettyprint prettyprinted"><code><span class="pln">$</span><span class="pun">.</span><span class="pln">get</span><span class="pun">(</span><span class="str">'Test_Controller.html'</span><span class="pun">,</span><span class="pln">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">){</span><span class="pln"> 
-										alert</span><span class="pun">(</span><span class="pln">response</span><span class="pun">);</span><span class="pln">
-									</span><span class="pun">});</span></code></pre>
-
-									<p>and in my <code>Test_Controller.html</code> servlet i have :</p>
-
-									<pre class="lang-java prettyprint prettyprinted"><code><span class="pln">    request</span><span class="pun">.</span><span class="pln">setAttribute</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">,</span><span class="str">"testData"</span><span class="pun">);</span><span class="pln">
-									</span><span class="typ">RequestDispatcher</span><span class="pln"> requestDispatcher </span><span class="pun">=</span><span class="pln">
-									request</span><span class="pun">.</span><span class="pln">getRequestDispatcher</span><span class="pun">(</span><span class="str">"/test.jsp"</span><span class="pun">);</span><span class="pln">
-									requestDispatcher</span><span class="pun">.</span><span class="pln">forward</span><span class="pun">(</span><span class="pln">request</span><span class="pun">,</span><span class="pln">response</span><span class="pun">);</span></code></pre>
-
-									<p>Question is : </p>
-
-									<p>why is that the <code>response</code> will always alert the text content of the <code>test.jsp</code> and not the <code>JSON</code> that i passed through the <code>getWriter()</code></p>
-
-									<p><strong>EDIT :</strong></p>
-
-									<p>I need to get the : </p>
-
-									<pre class="lang-java prettyprint prettyprinted"><code><span class="pln">  </span><span class="typ">TestData</span><span class="pln"> testData </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">TestData</span><span class="pun">();</span><span class="pln">
-										request</span><span class="pun">.</span><span class="pln">setAttribute</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">,</span><span class="pln">testData</span><span class="pun">);</span></code></pre>
-
-										<p>using jQuery's $.get() so the page won't reload, but unfortunately when i didn't do dispatch my response object seems to be null and when i do dispatch and forward, when i alert the response it alerts the text of the page.</p>
-
-									</div>
-									<div class="post-taglist">
-										<a href="/questions/tagged/java" class="post-tag js-gps-track" title="" rel="tag">java</a> <a href="/questions/tagged/jquery" class="post-tag js-gps-track" title="show questions tagged 'jquery'" rel="tag">jquery</a> <a href="/questions/tagged/ajax" class="post-tag js-gps-track" title="show questions tagged 'ajax'" rel="tag">ajax</a> <a href="/questions/tagged/servlets" class="post-tag js-gps-track" title="show questions tagged 'servlets'" rel="tag">servlets</a> <a href="/questions/tagged/get" class="post-tag js-gps-track" title="show questions tagged 'get'" rel="tag">get</a> 
-									</div>
-									<table class="fw">
-										<tbody><tr>
-											<td class="vt">
-												<div class="post-menu"><a href="/q/26969773/614285" title="short permalink to this question" class="short-link" id="link-post-26969773">share</a><span class="lsep">|</span><a href="/posts/26969773/edit" class="suggest-edit-post" title="revise and improve this post">edit</a><span class="lsep">|</span><a href="#" class="flag-post-link" title="flag this post for serious problems or moderator attention" data-postid="26969773">flag</a></div>        
-											</td>
-											<td align="right" class="post-signature">
-												<div class="user-info ">
+												</div>
+											</div>    </td>
+											<td class="post-signature owner">
+												<div class="user-info user-hover">
 													<div class="user-action-time">
-														<a href="/posts/26969773/revisions" title="show all edits to this post">edited <span title="2014-11-20 09:57:12Z" class="relativetime">Nov 20 at 9:57</span></a>
+														asked <span title="2014-11-17 09:46:41Z" class="relativetime">Nov 17 at 9:46</span>
 													</div>
 													<div class="user-gravatar32">
-														
+														<a href="/users/3706101/yaje"><div class="gravatar-wrapper-32"><img src="http://i.stack.imgur.com/QtyxD.jpg?s=32&amp;g=1" alt="" width="32" height="32"></div></a>
 													</div>
 													<div class="user-details">
-														<br>
-														
+														<a href="/users/3706101/yaje">Yaje</a><br>
+														<span class="reputation-score" title="reputation score " dir="ltr">1,593</span><span title="5 silver badges"><span class="badge2"></span><span class="badgecount">5</span></span><span title="20 bronze badges"><span class="badge3"></span><span class="badgecount">20</span></span>
 													</div>
-												</div>    </td>
-												<td class="post-signature owner">
-													<div class="user-info user-hover">
-														<div class="user-action-time">
-															asked <span title="2014-11-17 09:46:41Z" class="relativetime">Nov 17 at 9:46</span>
-														</div>
-														<div class="user-gravatar32">
-															<a href="/users/3706101/yaje"><div class="gravatar-wrapper-32"><img src="http://i.stack.imgur.com/QtyxD.jpg?s=32&amp;g=1" alt="" width="32" height="32"></div></a>
-														</div>
-														<div class="user-details">
-															<a href="/users/3706101/yaje">Yaje</a><br>
-															<span class="reputation-score" title="reputation score " dir="ltr">1,593</span><span title="5 silver badges"><span class="badge2"></span><span class="badgecount">5</span></span><span title="20 bronze badges"><span class="badge3"></span><span class="badgecount">20</span></span>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
-		
-		<div id="sidebar" class="show-votes">
-			<div class="module question-stats">
-				<table id="qinfo">
-					<tbody><tr>
-						<td>
-							<p class="label-key">asked</p>
-						</td>
-						<td style="padding-left: 10px">
-							<p class="label-key" title="2014-11-17 09:46:41Z"><b>9 days ago</b></p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p class="label-key">viewed</p>
-						</td>
 
-						<td style="padding-left: 10px">
-							<p class="label-key">
-								<b>160 times</b>
-							</p>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p class="label-key">active</p>
-						</td>
-						<td style="padding-left: 10px">
-							<p class="label-key"><b><a href="?lastactivity" class="lastactivity-link" title="2014-11-25 09:39:59Z">yesterday</a></b></p>
-						</td>
-					</tr>
-				</tbody></table>
-			</div>
-			<div class="module community-bulletin" data-tracker="cb=1">
-				<div class="related">
+	</div>
+
+	<div id="sidebar" class="show-votes">
+		<div class="module question-stats">
+			<table id="qinfo">
+				<tbody><tr>
+					<td>
+						<p class="label-key">asked</p>
+					</td>
+					<td style="padding-left: 10px">
+						<p class="label-key" title="2014-11-17 09:46:41Z"><b>9 days ago</b></p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p class="label-key">viewed</p>
+					</td>
+
+					<td style="padding-left: 10px">
+						<p class="label-key">
+							<b>160 times</b>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p class="label-key">active</p>
+					</td>
+					<td style="padding-left: 10px">
+						<p class="label-key"><b><a href="?lastactivity" class="lastactivity-link" title="2014-11-25 09:39:59Z">yesterday</a></b></p>
+					</td>
+				</tr>
+			</tbody></table>
+		</div>
+		<div class="module community-bulletin" data-tracker="cb=1">
+			<div class="related">
+				<div class="bulletin-title">
+					Blog
+				</div>
+				<hr>
+				<div class="spacer">
+					<div class="bulletin-item-type">
+						<a href="http://blog.stackoverflow.com/2014/11/podcast-61-the-what-jays-done-wrong-podcast/?cb=1" class="question-hyperlink">
+							<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
+						</div>
+						<div class="bulletin-item-content">
+							<a href="http://blog.stackoverflow.com/2014/11/podcast-61-the-what-jays-done-wrong-podcast/?cb=1" class="question-hyperlink">Podcast #61 – The “What Jay’s Done Wrong” Podcast</a>
+						</div>
+						<br class="cbt">
+					</div>
 					<div class="bulletin-title">
-						Blog
+						Hot Meta Posts
 					</div>
 					<hr>
 					<div class="spacer">
 						<div class="bulletin-item-type">
-							<a href="http://blog.stackoverflow.com/2014/11/podcast-61-the-what-jays-done-wrong-podcast/?cb=1" class="question-hyperlink">
-								<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
-							</div>
-							<div class="bulletin-item-content">
-								<a href="http://blog.stackoverflow.com/2014/11/podcast-61-the-what-jays-done-wrong-podcast/?cb=1" class="question-hyperlink">Podcast #61 – The “What Jay’s Done Wrong” Podcast</a>
-							</div>
-							<br class="cbt">
+							<span title="Vote score (upvotes - downvotes)">6</span>
 						</div>
-						<div class="bulletin-title">
-							Hot Meta Posts
+						<div class="bulletin-item-content">
+							<a href="http://meta.stackoverflow.com/questions/277950/is-a-question-a-duplicate-if-the-duplicate-has-no-answers?cb=1" class="question-hyperlink">Is a question a duplicate if the duplicate has no answers?</a>
 						</div>
-						<hr>
-						<div class="spacer">
-							<div class="bulletin-item-type">
-								<span title="Vote score (upvotes - downvotes)">6</span>
-							</div>
-							<div class="bulletin-item-content">
-								<a href="http://meta.stackoverflow.com/questions/277950/is-a-question-a-duplicate-if-the-duplicate-has-no-answers?cb=1" class="question-hyperlink">Is a question a duplicate if the duplicate has no answers?</a>
-							</div>
-							<br class="cbt">
-						</div>
-						<div class="spacer">
-							<div class="bulletin-item-type">
-								<span title="Vote score (upvotes - downvotes)">20</span>
-							</div>
-							<div class="bulletin-item-content">
-								<a href="http://meta.stackoverflow.com/questions/277896/reference-style-markdown-links-being-misidentified-as-code-your-post-appears-t?cb=1" class="question-hyperlink">Reference style markdown links being misidentified as code: "Your post appear…</a>
-							</div>
-							<br class="cbt">
-						</div>
-						<div class="spacer">
-							<div class="bulletin-item-type">
-								<span title="Vote score (upvotes - downvotes)">17</span>
-							</div>
-							<div class="bulletin-item-content">
-								<a href="http://meta.stackoverflow.com/questions/277891/should-we-automatically-detect-pastebin-and-other-related-sites?cb=1" class="question-hyperlink">Should we automatically detect pastebin (and other related) sites?</a>
-							</div>
-							<br class="cbt">
-						</div>
+						<br class="cbt">
 					</div>
-				</div>			
-				<script>
-					var ados = ados || {};ados.run = ados.run || [];
-					ados.run.push(function() { ados_add_placement(22,8277,"adzerk1200938078",[17,2221]).setZone(45) ; });                    
-				</script>
-				<div class="everyonelovesstackoverflow" id="adzerk1200938078">
-				</div>  
-
-
-				<div class="module sidebar-related">
-					<h4 id="h-related">Related</h4>
-					<div class="related js-gps-related-questions" data-tracker="rq=1">
-						<div class="spacer js-gps-track">
-							<a href="http://stackoverflow.com/q/503093?rq=1" title="Vote score (upvotes - downvotes)">
-								<div class="answer-votes answered-accepted extra-large">2996
-								</div>
-							</a><a href="http://stackoverflow.com/questions/503093/how-can-i-make-a-redirect-page-in-jquery-javascript?rq=1" class="question-hyperlink">How can I make a redirect page in jQuery/JavaScript?</a>
+					<div class="spacer">
+						<div class="bulletin-item-type">
+							<span title="Vote score (upvotes - downvotes)">20</span>
 						</div>
-						<div class="spacer js-gps-track">
-							<a href="http://stackoverflow.com/q/5520954?rq=1" title="Vote score (upvotes - downvotes)">
-								<div class="answer-votes default">0
-								</div>
-							</a><a href="http://stackoverflow.com/questions/5520954/jquery-ajax-get-request-works-post-request-displays-blank-page?rq=1" class="question-hyperlink">Jquery/Ajax get request works, post request displays blank page</a>
+						<div class="bulletin-item-content">
+							<a href="http://meta.stackoverflow.com/questions/277896/reference-style-markdown-links-being-misidentified-as-code-your-post-appears-t?cb=1" class="question-hyperlink">Reference style markdown links being misidentified as code: "Your post appear…</a>
 						</div>
-						<div class="spacer js-gps-track">
-							<a href="http://stackoverflow.com/q/12662151?rq=1" title="Vote score (upvotes - downvotes)">
-								<div class="answer-votes answered-accepted default">0
-								</div>
-							</a><a href="http://stackoverflow.com/questions/12662151/ajax-request-for-login-not-working-using-post-method-in-jquery?rq=1" class="question-hyperlink">Ajax request for login not working using $.post() method in jquery</a>
-						</div>
-						<div class="spacer js-gps-track">
-							<a href="http://stackoverflow.com/q/17696051?rq=1" title="Vote score (upvotes - downvotes)">
-								<div class="answer-votes answered-accepted default">1
-								</div>
-							</a><a href="http://stackoverflow.com/questions/17696051/how-to-redirect-forward-request-to-another-jsp-page-in-servlet-called-by-ajax?rq=1" class="question-hyperlink">How to redirect/forward request to another jsp page in servlet called by $.ajax() function</a>
-						</div>
-						
-
+						<br class="cbt">
 					</div>
+					<div class="spacer">
+						<div class="bulletin-item-type">
+							<span title="Vote score (upvotes - downvotes)">17</span>
+						</div>
+						<div class="bulletin-item-content">
+							<a href="http://meta.stackoverflow.com/questions/277891/should-we-automatically-detect-pastebin-and-other-related-sites?cb=1" class="question-hyperlink">Should we automatically detect pastebin (and other related) sites?</a>
+						</div>
+						<br class="cbt">
+					</div>
+				</div>
+			</div>			
+			<script>
+				var ados = ados || {};ados.run = ados.run || [];
+				ados.run.push(function() { ados_add_placement(22,8277,"adzerk1200938078",[17,2221]).setZone(45) ; });                    
+			</script>
+			<div class="everyonelovesstackoverflow" id="adzerk1200938078">
+			</div>  
+
+
+			<div class="module sidebar-related">
+				<h4 id="h-related">Related</h4>
+				<div class="related js-gps-related-questions" data-tracker="rq=1">
+					<div class="spacer js-gps-track">
+						<a href="http://stackoverflow.com/q/503093?rq=1" title="Vote score (upvotes - downvotes)">
+							<div class="answer-votes answered-accepted extra-large">2996
+							</div>
+						</a><a href="http://stackoverflow.com/questions/503093/how-can-i-make-a-redirect-page-in-jquery-javascript?rq=1" class="question-hyperlink">How can I make a redirect page in jQuery/JavaScript?</a>
+					</div>
+					<div class="spacer js-gps-track">
+						<a href="http://stackoverflow.com/q/5520954?rq=1" title="Vote score (upvotes - downvotes)">
+							<div class="answer-votes default">0
+							</div>
+						</a><a href="http://stackoverflow.com/questions/5520954/jquery-ajax-get-request-works-post-request-displays-blank-page?rq=1" class="question-hyperlink">Jquery/Ajax get request works, post request displays blank page</a>
+					</div>
+					<div class="spacer js-gps-track">
+						<a href="http://stackoverflow.com/q/12662151?rq=1" title="Vote score (upvotes - downvotes)">
+							<div class="answer-votes answered-accepted default">0
+							</div>
+						</a><a href="http://stackoverflow.com/questions/12662151/ajax-request-for-login-not-working-using-post-method-in-jquery?rq=1" class="question-hyperlink">Ajax request for login not working using $.post() method in jquery</a>
+					</div>
+					<div class="spacer js-gps-track">
+						<a href="http://stackoverflow.com/q/17696051?rq=1" title="Vote score (upvotes - downvotes)">
+							<div class="answer-votes answered-accepted default">1
+							</div>
+						</a><a href="http://stackoverflow.com/questions/17696051/how-to-redirect-forward-request-to-another-jsp-page-in-servlet-called-by-ajax?rq=1" class="question-hyperlink">How to redirect/forward request to another jsp page in servlet called by $.ajax() function</a>
+					</div>
+
+
 				</div>
 			</div>
 
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<br/>
+			<div class="module" id="questions-count">
+				<h4 id="h-related">Authoritative Response</h4>
+				<div class="summarycount al">&lt;1 Hour</div>
+				<p>Our records indicate that this question is likely to be answered "authoritatively" within an hour</p>
+			</div>
+			<div class="module" id="questions-count">
+				<h4 id="h-related">First Response</h4>
+				<div class="summarycount al">&lt;1 Hour</div>
+				<p>Our records indicate that this question is likely to get its first answer within an hour</p>
+			</div>
 		</div>
 
 	</div>
